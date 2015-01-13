@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,7 +38,6 @@ public class Gui extends JFrame implements ActionListener {
 	Referee referee;
 	FileStore fileStore = null;
 	
-	private static final String[] TRAVEL_AREAS = {"North","Central","South"};
 	private static final String FORM_EDIT = "Edit";
 	private static final String FORM_SAVE = "Save";
 	private static final String FORM_ADD = "Add";
@@ -190,10 +190,11 @@ public class Gui extends JFrame implements ActionListener {
 		addFormInput.add(txtEditAllocations);
 		
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[5]));
-		JTextField txtEditHomeArea = new JTextField(referee.getHomeArea());
-		txtEditHomeArea.setMaximumSize(txtEditHomeArea.getPreferredSize());
-		txtEditHomeArea.setEditable(formAction.equals(Gui.FORM_ADD));
-		addFormInput.add(txtEditHomeArea);
+		JComboBox<String> cbTravelAreas = new JComboBox<String>(Referee.HOME_AREAS);
+		cbTravelAreas.setSelectedItem(referee.getHomeAreaIndex());
+		cbTravelAreas.setMaximumSize(cbTravelAreas.getPreferredSize());
+		cbTravelAreas.setEditable(formAction.equals(Gui.FORM_ADD));
+		addFormInput.add(cbTravelAreas);
 		
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[6]));
 		JTextField txtEditTravelAreas = new JTextField(referee.getTravelAreas());
@@ -209,7 +210,7 @@ public class Gui extends JFrame implements ActionListener {
 					case Gui.FORM_EDIT : 
 						btnAddOrEdit.setText(Gui.FORM_SAVE);
 						txtEditQualification.setEditable(true);
-						txtEditHomeArea.setEditable(true);
+						cbTravelAreas.setEditable(true);
 						txtEditTravelAreas.setEditable(true);
 						break;
 					case Gui.FORM_SAVE : 

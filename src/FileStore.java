@@ -75,7 +75,9 @@ public class FileStore {
 	private Referee[] readIn() {
 		List<Referee> refereeList = readIn(FileStore.INPUT_FILE_NAME);
 		if (refereeList != null) {
-			return refereeList.toArray(new Referee[refereeList.size()]);	
+			Referee[] referees = refereeList.toArray(new Referee[refereeList.size()]);
+			Arrays.sort(referees);;
+			return referees;	
 		} else {
 			return null;
 		}

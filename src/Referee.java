@@ -1,7 +1,8 @@
 
 public class Referee implements Comparable<Referee> {
 	
-	static final String[] FIELD_NAMES = {"ID","FIRST NAME","LAST NAME"
+	public static final String[] HOME_AREAS = {"North","Central","South"};
+	public static final String[] FIELD_NAMES = {"ID","FIRST NAME","LAST NAME"
 		,"QUALIFICATION","ALLOCATIONS","HOME AREA","TRAVEL AREA"};
 	
 	String id;
@@ -24,6 +25,17 @@ public class Referee implements Comparable<Referee> {
 		this.homeArea = homeArea;
 		this.travelAreas = travelAreas;
 		
+	}
+	
+	public int getHomeAreaIndex() {
+		int homeAreaIndex = -1;
+		for (int i=0;i<Referee.HOME_AREAS.length;i++) {
+			if (Referee.HOME_AREAS[i].equals(this.getHomeArea())) {
+				homeAreaIndex = i;
+				break;
+			}
+		}
+		return homeAreaIndex;
 	}
 
 	public String getId() {
@@ -141,10 +153,10 @@ public class Referee implements Comparable<Referee> {
 		 * Sorting should be done on first two characters of the ID
 		 * and then the number
 		 */
-		String thisInitials = this.getId().substring(0,1);
-		String otherInitials = other.getId().substring(0,1);
-		int thisIdNum = Integer.parseInt(this.getId().substring(1,2));
-		int otherIdNum = Integer.parseInt(other.getId().substring(1,2));
+		String thisInitials = this.getId().substring(0,2);
+		String otherInitials = other.getId().substring(0,2);
+		int thisIdNum = Integer.parseInt(this.getId().substring(2,3));
+		int otherIdNum = Integer.parseInt(other.getId().substring(2,3));
 		int areEqual = thisInitials.compareTo(otherInitials);
 		if (areEqual == 0) {
 			return thisIdNum == otherIdNum ? 0 : thisIdNum < otherIdNum ? -1 : 1; 
