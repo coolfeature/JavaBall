@@ -1,8 +1,6 @@
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +9,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -19,12 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class Gui extends JFrame implements ActionListener {
@@ -38,13 +33,16 @@ public class Gui extends JFrame implements ActionListener {
 	JTextField txtFirstName;
 	JTextField txtLastName;
 	
-	Gui gui = this;
+	JTable table;
+	Referee referee;
 	FileStore fileStore = null;
 	
 	private static final String[] TRAVEL_AREAS = {"North","Central","South"};
 	private static final String FORM_EDIT = "Edit";
 	private static final String FORM_SAVE = "Save";
 	private static final String FORM_ADD = "Add";
+	private static final String FORM_CANCEL = "Cancel";
+	private static final String FORM_DELETE = "Delete";
 	
 	public Gui() {
 		this.setLocation(200, 200);
@@ -59,7 +57,11 @@ public class Gui extends JFrame implements ActionListener {
 		JPanel container = new JPanel(new BorderLayout());
 		JTabbedPane tabbedPane = new JTabbedPane();
 
-		JComponent listTab = makeRefereesTab();
+		JComponent listTab = new JPanel(new BorderLayout());
+		table = new JTable();
+		refreshTableData();
+		JScrollPane scrollPane = new JScrollPane(table);
+		listTab.add(scrollPane, BorderLayout.NORTH);
 		listTab.setPreferredSize(new Dimension(300, 300));
 		tabbedPane.addTab("Referees", listTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
@@ -69,18 +71,16 @@ public class Gui extends JFrame implements ActionListener {
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 
 		btnExit = new JButton("Exit");
+		btnExit.addActionListener(this);
 		container.add(btnExit,BorderLayout.SOUTH);
 		container.add(tabbedPane);
 		this.add(container);
 	}
 
-	protected JComponent makeRefereesTab() {
-		JPanel panel = new JPanel(new BorderLayout());
-		JTable table = new JTable(fileStore.getRefereesData(),
-				Referee.FIELD_NAMES);
-		JScrollPane scrollPane = new JScrollPane(table);
-		panel.add(scrollPane, BorderLayout.NORTH);
-		return panel;
+	public void refreshTableData() {
+		DefaultTableModel model = new DefaultTableModel(
+				fileStore.getRefereesData(),Referee.FIELD_NAMES);
+		table.setModel(model);
 	}
 
 	protected JComponent makeSearchTab() {
@@ -152,62 +152,62 @@ public class Gui extends JFrame implements ActionListener {
 		return searchPanel;
 	}
 	
-	private void showAddOrEditForm(Referee referee,String formAction) {
+	private void showAddOrEditForm(String formAction) {
 		editPanel.removeAll();
 		if (referee == null || formAction == Gui.FORM_ADD) {
 			referee = new Referee("","","","",0,"","");
 		} 
-		JPanel addForm = new JPanel(new GridLayout(Referee.FIELD_NAMES.length + 1, 2));
+		JPanel addFormInput = new JPanel(new GridLayout(Referee.FIELD_NAMES.length, 2));
 		
-		addForm.add(new JLabel(Referee.FIELD_NAMES[0]));
+		addFormInput.add(new JLabel(Referee.FIELD_NAMES[0]));
 		JTextField txtEditId = new JTextField(referee.getId());
 		txtEditId.setMaximumSize(txtEditId.getPreferredSize());
 		txtEditId.setEditable(formAction.equals(Gui.FORM_ADD));
-		addForm.add(txtEditId);
+		addFormInput.add(txtEditId);
 		
-		addForm.add(new JLabel(Referee.FIELD_NAMES[1]));
+		addFormInput.add(new JLabel(Referee.FIELD_NAMES[1]));
 		JTextField txtEditFirstName = new JTextField(referee.getFirstName());
 		txtEditFirstName.setMaximumSize(txtEditFirstName.getPreferredSize());
 		txtEditFirstName.setEditable(formAction.equals(Gui.FORM_ADD));
-		addForm.add(txtEditFirstName);
+		addFormInput.add(txtEditFirstName);
 		
-		addForm.add(new JLabel(Referee.FIELD_NAMES[2]));
+		addFormInput.add(new JLabel(Referee.FIELD_NAMES[2]));
 		JTextField txtEditLastName = new JTextField(referee.getLastName());
 		txtEditLastName.setMaximumSize(txtEditLastName.getPreferredSize());
 		txtEditLastName.setEditable(formAction.equals(Gui.FORM_ADD));
-		addForm.add(txtEditLastName);
+		addFormInput.add(txtEditLastName);
 		
-		addForm.add(new JLabel(Referee.FIELD_NAMES[3]));
+		addFormInput.add(new JLabel(Referee.FIELD_NAMES[3]));
 		JTextField txtEditQualification = new JTextField(referee.getQualification());
 		txtEditQualification.setMaximumSize(txtEditQualification.getPreferredSize());
 		txtEditQualification.setEditable(formAction.equals(Gui.FORM_ADD));
-		addForm.add(txtEditQualification);
+		addFormInput.add(txtEditQualification);
 		
-		addForm.add(new JLabel(Referee.FIELD_NAMES[4]));
+		addFormInput.add(new JLabel(Referee.FIELD_NAMES[4]));
 		JTextField txtEditAllocations = new JTextField(Integer.toString(referee.getAllocations()));
 		txtEditAllocations.setMaximumSize(txtEditAllocations.getPreferredSize());
 		txtEditAllocations.setEditable(formAction.equals(Gui.FORM_ADD));
-		addForm.add(txtEditAllocations);
+		addFormInput.add(txtEditAllocations);
 		
-		addForm.add(new JLabel(Referee.FIELD_NAMES[5]));
+		addFormInput.add(new JLabel(Referee.FIELD_NAMES[5]));
 		JTextField txtEditHomeArea = new JTextField(referee.getHomeArea());
 		txtEditHomeArea.setMaximumSize(txtEditHomeArea.getPreferredSize());
 		txtEditHomeArea.setEditable(formAction.equals(Gui.FORM_ADD));
-		addForm.add(txtEditHomeArea);
+		addFormInput.add(txtEditHomeArea);
 		
-		addForm.add(new JLabel(Referee.FIELD_NAMES[6]));
+		addFormInput.add(new JLabel(Referee.FIELD_NAMES[6]));
 		JTextField txtEditTravelAreas = new JTextField(referee.getTravelAreas());
 		txtEditTravelAreas.setMaximumSize(txtEditTravelAreas.getPreferredSize());
 		txtEditTravelAreas.setEditable(formAction.equals(Gui.FORM_ADD));
-		addForm.add(txtEditTravelAreas);
+		addFormInput.add(txtEditTravelAreas);
 		
-		JButton btnFormAction = new JButton(formAction.equals(Gui.FORM_EDIT) ? Gui.FORM_EDIT : Gui.FORM_ADD);
-		btnFormAction.addActionListener(new ActionListener() {
+		JButton btnAddOrEdit = new JButton(formAction.equals(Gui.FORM_EDIT) ? Gui.FORM_EDIT : Gui.FORM_ADD);
+		btnAddOrEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				switch (btnFormAction.getText()) {
+				switch (btnAddOrEdit.getText()) {
 					case Gui.FORM_EDIT : 
-						btnFormAction.setText(Gui.FORM_SAVE);
+						btnAddOrEdit.setText(Gui.FORM_SAVE);
 						txtEditQualification.setEditable(true);
 						txtEditHomeArea.setEditable(true);
 						txtEditTravelAreas.setEditable(true);
@@ -219,32 +219,46 @@ public class Gui extends JFrame implements ActionListener {
 				}
 			}
 		});
-		addForm.add(btnFormAction);
-		btnFormCancel = new JButton("Cancel");
-		btnFormCancel.addActionListener(this);
-		addForm.add(btnFormCancel);		
 		
-		editPanel.add(addForm);
-		this.revalidate();
-	}
-
-	public Referee search(String firstName, String lastName) {
-		Referee[] referees = fileStore.getReferees();
-		Referee referee = null;
-		for (Referee ref : referees) {
-			if (ref.getFirstName().equals(firstName)
-					&& ref.getLastName().equals(lastName)) {
-				referee = ref;
+		btnFormCancel = new JButton(Gui.FORM_CANCEL);
+		btnFormCancel.addActionListener(this);
+		
+		JButton btnFormDelete = new JButton(Gui.FORM_DELETE);
+		btnFormDelete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (fileStore.removeReferee(referee)) {
+					refreshTableData();
+					JOptionPane.showMessageDialog(null, "Referee has not been removed",
+							"Entry removed", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(null, "Referee has not been found",
+						"No entry", JOptionPane.WARNING_MESSAGE);
+				}
 			}
+		});
+		
+		JPanel addFormButtons;
+		if (formAction.equals(Gui.FORM_EDIT)) {
+			addFormButtons = new JPanel(new GridLayout(1,3));
+			addFormButtons.add(btnAddOrEdit);
+			addFormButtons.add(btnFormCancel);
+			addFormButtons.add(btnFormDelete);
+		} else {
+			addFormButtons = new JPanel(new GridLayout(1,2));
+			addFormButtons.add(btnAddOrEdit);
+			addFormButtons.add(btnFormCancel);
 		}
-		return referee;
+		editPanel.add(addFormInput);
+		editPanel.add(addFormButtons,BorderLayout.SOUTH);
+		this.revalidate();
 	}
 	
 	private void runSearch() {
 		String firstName = txtFirstName.getText().trim(); 
 		String lastName = txtLastName.getText().trim();
-		Referee referee = search(firstName,lastName);
-		showAddOrEditForm(referee,Gui.FORM_EDIT);;
+		referee = fileStore.search(firstName,lastName);
+		showAddOrEditForm(Gui.FORM_EDIT);
 		txtFirstName.setText("");
 		txtLastName.setText("");
 		btnSearch.setEnabled(false);
@@ -256,11 +270,12 @@ public class Gui extends JFrame implements ActionListener {
 		if (event.getSource() == btnSearch) {
 			runSearch();
 		} else if (event.getSource() == btnAdd) {
-			showAddOrEditForm(null,Gui.FORM_ADD);
+			showAddOrEditForm(Gui.FORM_ADD);
 		} else if (event.getSource() == btnFormCancel) {
-			editPanel.removeAll();
 			editPanel.add(new JPanel(new BorderLayout()));
-			this.invalidate();
+			this.revalidate();
+		} else if (event.getSource() == btnExit) {
+			System.exit(0);
 		}
 	}
 }

@@ -2,6 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,11 +10,9 @@ public class FileStore {
 	
 	public static final String INPUT_FILE_NAME = "RefereesIn.txt";
 	private Referee[] referees = null;
-	private Object[][] refereesData = null;
 	
 	public FileStore() {
 		this.referees = readIn();
-		this.refereesData = readInRefereesData();
 	}
 	
 	public Referee[] getReferees() {
@@ -23,22 +22,42 @@ public class FileStore {
 	public void setReferees(Referee[] referees) {
 		this.referees = referees;
 	}
-
 	
+	public boolean removeReferee(Referee referee) {
+		List<Referee> refereeList = new ArrayList<Referee>(Arrays.asList(referees));
+		boolean found = false;
+		int position = 0;
+		for(int i=0;i<referees.length;i++) {
+			if (referees[i].getId().equals(referee.getId())) {
+				found = true;
+				position = i;
+				break;
+			}
+		}
+		if (found) {
+			refereeList.remove(position);
+			referees = refereeList.toArray(new Referee[refereeList.size()]);
+		} 
+		return found;
+	}
+	
+	public Referee search(String firstName, String lastName) {
+		Referee referee = null;
+		for (Referee ref : referees) {
+			if (ref.getFirstName().equals(firstName)
+					&& ref.getLastName().equals(lastName)) {
+				referee = ref;
+				break;
+			}
+		}
+		return referee;
+	}
+
 	public Object[][] getRefereesData() {
-		return refereesData;
-	}
-
-	public void setRefereesData(Object[][] refereesData) {
-		this.refereesData = refereesData;
-	}
-
-	private Object[][] readInRefereesData() {
-		List<Referee> refereeList = readIn(FileStore.INPUT_FILE_NAME);
-		if (refereeList != null) {
-			Object[][] refereesData = new Object[refereeList.size()][Referee.FIELD_NAMES.length];	
-			for (int i = 0; i < refereeList.size(); i++) {
-			    Referee referee = refereeList.get(i);
+		if (referees != null && referees.length > 0) {
+			Object[][] refereesData = new Object[referees.length][Referee.FIELD_NAMES.length];	
+			for (int i = 0; i < referees.length; i++) {
+			    Referee referee = referees[i];
 			    refereesData[i][0] = referee.getId();
 			    refereesData[i][1] = referee.getFirstName();
 			    refereesData[i][2] = referee.getLastName();
@@ -104,5 +123,11 @@ public class FileStore {
 			e.printStackTrace();
 		}
 		return referees;
+	}
+	
+	public void printReferees() {
+		for (Referee referee : referees) {
+			System.out.println(referee.toString());
+		}
 	}
 }
