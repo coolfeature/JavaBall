@@ -1,3 +1,4 @@
+package n.models;
 
 public class Match {
 
@@ -63,6 +64,12 @@ public class Match {
 		}
 		// Sort the pre-selected referees if any by the number of allocations
 		if (resultIndex != 0) {
+			Referee[] preAllocated = new Referee[resultIndex + 1];
+			for (int i=0;i<result.length;i++) {
+				if (result[i] != null) {
+					
+				}
+			}
 			
 		}
 	}

@@ -1,3 +1,4 @@
+package n.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -6,15 +7,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import n.db.DataSource;
+import n.models.Referee;
 
-public class GuiReferees extends JPanel {
+
+public class Referees extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String TAB_NAME = "Referees";
 	DataSource fileStore = null;
 	JTable table = null;
 			
-	public GuiReferees(DataSource fileStore) {
+	public Referees(DataSource fileStore) {
 		this.fileStore = fileStore;
 		this.setLayout(new BorderLayout());
 		table = new JTable();

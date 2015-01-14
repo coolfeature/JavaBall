@@ -1,3 +1,4 @@
+package n.gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -20,8 +21,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import n.db.DataSource;
+import n.models.Qualification;
+import n.models.Referee;
+import n.models.TravelAreas;
 
-public class GuiSearch extends JPanel implements ActionListener {
+
+public class Search extends JPanel implements ActionListener {
 	
 	public static final String TAB_NAME = "Search";
 	private static final long serialVersionUID = 1L;
@@ -38,9 +44,9 @@ public class GuiSearch extends JPanel implements ActionListener {
 	Referee referee;
 	
 	DataSource fileStore;
-	GuiReferees refereesTab;
+	Referees refereesTab;
 	
-	public GuiSearch(DataSource fileStore,GuiReferees refereesTab) {
+	public Search(DataSource fileStore,Referees refereesTab) {
 		this.fileStore = fileStore;
 		this.refereesTab = refereesTab;
 		this.setLayout(new BorderLayout());
@@ -112,11 +118,11 @@ public class GuiSearch extends JPanel implements ActionListener {
 		JPanel addSection = new JPanel(new BorderLayout());
 		JLabel lblAddTitle = new JLabel("Add a new Referee",SwingConstants.CENTER);
 		addSection.add(lblAddTitle,BorderLayout.CENTER);
-		JButton btnAdd = new JButton(GuiSearch.FORM_ADD);
+		JButton btnAdd = new JButton(Search.FORM_ADD);
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showAddOrEditForm(GuiSearch.FORM_ADD);
+				showAddOrEditForm(Search.FORM_ADD);
 			}
 		});
 		
@@ -137,7 +143,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 	
 	private void showAddOrEditForm(String formAction) {
 		editPanel.removeAll();
-		if (formAction == GuiSearch.FORM_ADD) {
+		if (formAction == Search.FORM_ADD) {
 			referee = new Referee("","");
 		} 
 		JPanel addFormInput = new JPanel(new GridLayout(Referee.FIELD_NAMES.length, 2));
@@ -153,14 +159,14 @@ public class GuiSearch extends JPanel implements ActionListener {
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[1]));
 		JTextField txtEditFirstName = new JTextField(referee.getFirstName());
 		txtEditFirstName.setMaximumSize(txtEditFirstName.getPreferredSize());
-		txtEditFirstName.setEditable(formAction.equals(GuiSearch.FORM_ADD));
+		txtEditFirstName.setEditable(formAction.equals(Search.FORM_ADD));
 		addFormInput.add(txtEditFirstName);
 		
 		// ------------------------ LAST NAME ---------------------------------
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[2]));
 		JTextField txtEditLastName = new JTextField(referee.getLastName());
 		txtEditLastName.setMaximumSize(txtEditLastName.getPreferredSize());
-		txtEditLastName.setEditable(formAction.equals(GuiSearch.FORM_ADD));
+		txtEditLastName.setEditable(formAction.equals(Search.FORM_ADD));
 		addFormInput.add(txtEditLastName);
 		
 		// ---------------------- QUALIFICAITONS ------------------------------
@@ -170,7 +176,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 		JComboBox<String> cbAwardingBodies = new JComboBox<String>(Qualification.AWARDING_BODIES);
 		cbAwardingBodies.setSelectedIndex(referee.getQualification().getAwardingBodyIndex());
 		cbAwardingBodies.setMaximumSize(cbAwardingBodies.getPreferredSize());
-		cbAwardingBodies.setEnabled(formAction.equals(GuiSearch.FORM_ADD));
+		cbAwardingBodies.setEnabled(formAction.equals(Search.FORM_ADD));
 		cbAwardingBodies.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
@@ -182,7 +188,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 		JComboBox<Short> cbQualificationLevel = new JComboBox<Short>(Qualification.LEVELS);
 		cbQualificationLevel.setSelectedIndex(referee.getQualification().getLevelIndex());
 		cbQualificationLevel.setMaximumSize(cbAwardingBodies.getPreferredSize());
-		cbQualificationLevel.setEnabled(formAction.equals(GuiSearch.FORM_ADD));
+		cbQualificationLevel.setEnabled(formAction.equals(Search.FORM_ADD));
 		cbQualificationLevel.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
@@ -196,7 +202,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[4]));		
 		JTextField txtEditAllocations = new JTextField(Integer.toString(referee.getAllocations()));
 		txtEditAllocations.setMaximumSize(txtEditAllocations.getPreferredSize());
-		txtEditAllocations.setEditable(formAction.equals(GuiSearch.FORM_ADD));
+		txtEditAllocations.setEditable(formAction.equals(Search.FORM_ADD));
 		addFormInput.add(txtEditAllocations);
 		
 		// ----------------------- HOME AREAS ---------------------------------
@@ -206,7 +212,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 			referee.getHomeAreaIndex());
 		cbHomeAreas.setSelectedItem(referee.getHomeAreaIndex());
 		cbHomeAreas.setMaximumSize(cbHomeAreas.getPreferredSize());
-		cbHomeAreas.setEnabled(formAction.equals(GuiSearch.FORM_ADD));
+		cbHomeAreas.setEnabled(formAction.equals(Search.FORM_ADD));
 		cbHomeAreas.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
@@ -221,7 +227,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 		JCheckBox cbNorth = new JCheckBox();
 		cbNorth.setText(Referee.HOME_AREAS[0]);
 		cbNorth.setSelected(referee.getTravelAreas().isNorth());
-		cbNorth.setEnabled(formAction.equals(GuiSearch.FORM_ADD));
+		cbNorth.setEnabled(formAction.equals(Search.FORM_ADD));
 		cbNorth.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
@@ -233,7 +239,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 		JCheckBox cbCentral = new JCheckBox();
 		cbCentral.setText(Referee.HOME_AREAS[1]);
 		cbCentral.setSelected(referee.getTravelAreas().isCentral());
-		cbCentral.setEnabled(formAction.equals(GuiSearch.FORM_ADD));
+		cbCentral.setEnabled(formAction.equals(Search.FORM_ADD));
 		cbCentral.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
@@ -245,7 +251,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 		JCheckBox cbSouth = new JCheckBox();
 		cbSouth.setText(Referee.HOME_AREAS[2]);
 		cbSouth.setSelected(referee.getTravelAreas().isSouth());
-		cbSouth.setEnabled(formAction.equals(GuiSearch.FORM_ADD));
+		cbSouth.setEnabled(formAction.equals(Search.FORM_ADD));
 		cbSouth.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
@@ -258,14 +264,14 @@ public class GuiSearch extends JPanel implements ActionListener {
 		addFormInput.add(cbPanel);
 		
 		// ------------------------- BUTTONS ----------------------------------
-		JButton btnAddOrEdit = new JButton(formAction.equals(GuiSearch.FORM_EDIT) 
-				? GuiSearch.FORM_EDIT : GuiSearch.FORM_ADD);
+		JButton btnAddOrEdit = new JButton(formAction.equals(Search.FORM_EDIT) 
+				? Search.FORM_EDIT : Search.FORM_ADD);
 		btnAddOrEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				switch (btnAddOrEdit.getText()) {
-					case GuiSearch.FORM_EDIT : 
-						btnAddOrEdit.setText(GuiSearch.FORM_SAVE);
+					case Search.FORM_EDIT : 
+						btnAddOrEdit.setText(Search.FORM_SAVE);
 						cbAwardingBodies.setEnabled(true);
 						cbQualificationLevel.setEnabled(true);
 						cbHomeAreas.setEnabled(true);
@@ -273,18 +279,18 @@ public class GuiSearch extends JPanel implements ActionListener {
 						cbCentral.setEnabled(true);
 						cbSouth.setEnabled(true);
 						break;
-					case GuiSearch.FORM_SAVE :
+					case Search.FORM_SAVE :
 						if (validateTravelArea()) {
 							if (fileStore.updateReferee(referee)) {
 								refereesTab.refreshTableData();
 								JOptionPane.showMessageDialog(null, "Referee details have been updated.",
 										"New Data", JOptionPane.INFORMATION_MESSAGE);
-								btnAddOrEdit.setText(GuiSearch.FORM_SAVE);
-								showAddOrEditForm(GuiSearch.FORM_EDIT);
+								btnAddOrEdit.setText(Search.FORM_SAVE);
+								showAddOrEditForm(Search.FORM_EDIT);
 							};
 						}  
 						break;
-					case GuiSearch.FORM_ADD :
+					case Search.FORM_ADD :
 						if (validateName(txtEditFirstName.getText()) 
 								&& validateName(txtEditLastName.getText())) {
 							referee.setFirstName(txtEditFirstName.getText().trim());
@@ -303,7 +309,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 												"New Referee", JOptionPane.WARNING_MESSAGE);
 									}
 									refereesTab.refreshTableData();
-									showAddOrEditForm(GuiSearch.FORM_EDIT);
+									showAddOrEditForm(Search.FORM_EDIT);
 								} 
 						}
 						break;
@@ -313,10 +319,10 @@ public class GuiSearch extends JPanel implements ActionListener {
 			}
 		});
 		
-		btnFormCancel = new JButton(GuiSearch.FORM_CANCEL);
+		btnFormCancel = new JButton(Search.FORM_CANCEL);
 		btnFormCancel.addActionListener(this);
 		
-		JButton btnFormDelete = new JButton(GuiSearch.FORM_DELETE);
+		JButton btnFormDelete = new JButton(Search.FORM_DELETE);
 		btnFormDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -334,7 +340,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 		});
 		
 		JPanel addFormButtons;
-		if (formAction.equals(GuiSearch.FORM_EDIT)) {
+		if (formAction.equals(Search.FORM_EDIT)) {
 			addFormButtons = new JPanel(new GridLayout(1,3));
 			addFormButtons.add(btnAddOrEdit);
 			addFormButtons.add(btnFormCancel);
@@ -407,7 +413,7 @@ public class GuiSearch extends JPanel implements ActionListener {
 	private void runSearch(String firstName, String lastName) {
 		referee = fileStore.search(firstName,lastName);
 		if (referee != null) {
-			showAddOrEditForm(GuiSearch.FORM_EDIT);
+			showAddOrEditForm(Search.FORM_EDIT);
 		} else {
 			JPanel noResultPanel = new JPanel(new BorderLayout());
 			JLabel lblNoResults = new JLabel("No Results");

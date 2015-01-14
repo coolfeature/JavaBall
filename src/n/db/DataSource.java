@@ -1,3 +1,4 @@
+package n.db;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -5,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+
+import n.models.Qualification;
+import n.models.Referee;
+import n.models.TravelAreas;
 
 public class DataSource {
 	

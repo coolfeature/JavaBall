@@ -1,3 +1,4 @@
+package n.gui;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -9,13 +10,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-public class Gui extends JFrame {
+import n.db.DataSource;
+
+public class Container extends JFrame {
 
 	public static final String APP_NAME = "JavaBall";
 	private static final long serialVersionUID = 1L;
 	DataSource fileStore = null;
 	
-	public Gui(DataSource fileStore) {
+	public Container(DataSource fileStore) {
 		this.setLocation(200, 200);
 		this.setSize(600, 500);
 		this.setTitle(APP_NAME);
@@ -28,24 +31,24 @@ public class Gui extends JFrame {
 		JPanel container = new JPanel(new BorderLayout());
 		JTabbedPane tabbedPane = new JTabbedPane();
 
-		GuiReferees refereesTab = new GuiReferees(fileStore);
-		tabbedPane.addTab(GuiReferees.TAB_NAME, refereesTab);
+		Referees refereesTab = new Referees(fileStore);
+		tabbedPane.addTab(Referees.TAB_NAME, refereesTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-		GuiSearch searchTab = new GuiSearch(fileStore,refereesTab);
-		tabbedPane.addTab(GuiSearch.TAB_NAME, searchTab);
+		Search searchTab = new Search(fileStore,refereesTab);
+		tabbedPane.addTab(Search.TAB_NAME, searchTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 
-		GuiChart chartTab = new GuiChart(fileStore);
-		tabbedPane.addTab(GuiChart.TAB_NAME, chartTab);
+		Chart chartTab = new Chart(fileStore);
+		tabbedPane.addTab(Chart.TAB_NAME, chartTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
 		
-		GuiAllocation allocationTab = new GuiAllocation(fileStore);
-		tabbedPane.addTab(GuiAllocation.TAB_NAME, allocationTab);
+		Allocation allocationTab = new Allocation(fileStore);
+		tabbedPane.addTab(Allocation.TAB_NAME, allocationTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
 		
-		GuiMatches matchesTab = new GuiMatches(fileStore);
-		tabbedPane.addTab(GuiMatches.TAB_NAME, matchesTab);
+		Matches matchesTab = new Matches(fileStore);
+		tabbedPane.addTab(Matches.TAB_NAME, matchesTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_5);
 		
 		JButton btnExit = new JButton("Exit");

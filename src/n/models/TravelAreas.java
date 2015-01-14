@@ -1,3 +1,4 @@
+package n.models;
 
 public class TravelAreas {
 	
