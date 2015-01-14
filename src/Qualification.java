@@ -3,11 +3,17 @@
 public class Qualification {
 	
 	public static final String[] AWARDING_BODIES = {"NJB","IJB"};
-	public static final short[] LEVELS = {1,2,3,4};
+	public static final Short[] LEVELS = {1,2,3,4};
 	
-	String awardingBody;
-	short level;
+	String awardingBody = Qualification.AWARDING_BODIES[0];
+	short level = Qualification.LEVELS[0];
 	
+	/*
+	 * Since the input from the file and from the form will always be correct
+	 * it is safe to have the instance initialising to the default of 
+	 * AWARDING_BODIES[0] + LEVELS[0] when the qualification constructor 
+	 * String argument is not valid which should never occur. 
+	 */
 	public Qualification (String qualification) {
 		this(inferAwardingBody(qualification),inferLevel(qualification));
 	}
@@ -29,7 +35,7 @@ public class Qualification {
 		if (qualification.length() > 3) {
 			return qualification.substring(0,3);
 		} else {
-			return "";
+			return Qualification.AWARDING_BODIES[0];
 		}
 	}
 	
@@ -41,8 +47,30 @@ public class Qualification {
 				return 0;
 			}
 		} else {
-			return 0;
+			return Qualification.LEVELS[0];
 		}
+	}
+	
+	public int getAwardingBodyIndex() {
+		int awardingBodyIndex = -1;
+		for (int i=0;i<Qualification.AWARDING_BODIES.length;i++) {
+			if (Qualification.AWARDING_BODIES[i].equals(this.getAwardingBody())) {
+				awardingBodyIndex = i;
+				break;
+			}
+		}
+		return awardingBodyIndex;
+	}
+	
+	public int getLevelIndex() {
+		int levelIndex = -1;
+		for (int i=0;i<Qualification.LEVELS.length;i++) {
+			if (Qualification.LEVELS[i] == this.getLevel()) {
+				levelIndex = i;
+				break;
+			}
+		}
+		return levelIndex;
 	}
 	
 	public String getAwardingBody() {
@@ -53,35 +81,17 @@ public class Qualification {
 		this.awardingBody = awardingBody;
 	}
 
-	public int getLevel() {
+	public short getLevel() {
 		return level;
 	}
 
 	public void setLevel(short level) {
 		this.level = level;
 	}
-
-	public static String getAdvice() {
-		StringBuilder sb = new StringBuilder("Awarding bodies are:");
-		for (String awardingBody : Qualification.AWARDING_BODIES) {
-			sb.append(" " + awardingBody);
-		}
-		sb.append(". Qualification levels are:");
-		for (short level : Qualification.LEVELS) {
-			sb.append(" " + level);
-		}
-		sb.append(". Example Qualification is: " 
-				+ Qualification.AWARDING_BODIES[0] + Qualification.LEVELS[3]);
-		return sb.toString();
-	}
 	
 	@Override
 	public String toString() {
-		if (awardingBody != null && level != 0) {
-			return awardingBody + level;
-		} else {
-			return "";
-		}
+		return awardingBody + level;
 	}
 
 	@Override

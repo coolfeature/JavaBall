@@ -165,6 +165,10 @@ public class FileStore {
 		}
 	}
 	
+	public String getRefereeId(Referee referee) {
+		return getRefereeId(referee.getFirstName(),referee.getLastName());
+	}
+	
 	public String getRefereeId(String firstName,String lastName) {
 		String initials = firstName.substring(0,1) + lastName.substring(0,1);
 		int id = 1;

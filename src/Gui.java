@@ -29,13 +29,8 @@ import javax.swing.table.DefaultTableModel;
 public class Gui extends JFrame implements ActionListener {
 	
 	JPanel editPanel;
-	JButton btnSearch;
-	JButton btnAdd;
 	JButton btnExit;
 	JButton btnFormCancel;
-	
-	JTextField txtFirstName;
-	JTextField txtLastName;
 	
 	JTable table;
 	Referee referee;
@@ -94,16 +89,32 @@ public class Gui extends JFrame implements ActionListener {
 
 		JLabel lblFirstName = new JLabel("First name");
 		searchSection.add(lblFirstName);
-
-		txtFirstName = new JTextField("");
+		
+		JTextField txtFirstName = new JTextField("");
 		txtFirstName.setMaximumSize(txtFirstName.getPreferredSize());
+		
+		JTextField txtLastName = new JTextField("");
+		txtLastName.setMaximumSize(txtLastName.getPreferredSize());
+		
+		JButton btnSearch = new JButton("Search");
+		btnSearch.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				runSearch(txtFirstName.getText().trim(),txtLastName.getText().trim());
+				txtFirstName.setText("");
+				txtLastName.setText("");
+				btnSearch.setEnabled(false);
+			}
+		});
+		btnSearch.setEnabled(false);
+		
 		txtFirstName.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent arg0) {}
 			@Override
 			public void focusLost(FocusEvent arg0) {
-            	if (!txtFirstName.getText().equals("") 
-            			&& !txtLastName.getText().equals("")) {
+            	if (!txtFirstName.getText().trim().equals("") 
+            			&& !txtLastName.getText().trim().equals("")) {
             		btnSearch.setEnabled(true);
             	} else {
             		btnSearch.setEnabled(false);
@@ -115,9 +126,7 @@ public class Gui extends JFrame implements ActionListener {
 		JLabel lblLastName = new JLabel("Last name");
 		searchSection.add(lblLastName);
 
-		txtLastName = new JTextField("");
-		txtLastName.setMaximumSize(txtLastName.getPreferredSize());
-		txtLastName.addKeyListener((new KeyAdapter() {
+		txtLastName.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
             	if (!txtLastName.getText().equals("") 
             			&& !txtLastName.getText().equals("")) {
@@ -126,15 +135,12 @@ public class Gui extends JFrame implements ActionListener {
             		btnSearch.setEnabled(false);
             	};
             }
-        }));
+        });
 		searchSection.add(txtLastName);
 
 		JLabel lblDummy = new JLabel("");
 		searchSection.add(lblDummy);
 
-		btnSearch = new JButton("Search");
-		btnSearch.addActionListener(this);
-		btnSearch.setEnabled(false);
 		searchSection.add(btnSearch);
 		
 		north.add(searchSection);
@@ -142,8 +148,14 @@ public class Gui extends JFrame implements ActionListener {
 		JPanel addSection = new JPanel(new BorderLayout());
 		JLabel lblAddTitle = new JLabel("Add a new Referee",SwingConstants.CENTER);
 		addSection.add(lblAddTitle,BorderLayout.CENTER);
-		btnAdd = new JButton(Gui.FORM_ADD);
-		btnAdd.addActionListener(this);
+		JButton btnAdd = new JButton(Gui.FORM_ADD);
+		btnAdd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showAddOrEditForm(Gui.FORM_ADD);
+			}
+		});
+		
 		btnAdd.setEnabled(true);
 		addSection.add(btnAdd,BorderLayout.SOUTH);
 		
@@ -156,7 +168,8 @@ public class Gui extends JFrame implements ActionListener {
 	}
 	
 	/*
-	 * Let's use the button label to store the some state. 
+	 * Let's reuse the button for Edit and Save using the label to store the 
+	 * state. 
 	 */
 	
 	private void showAddOrEditForm(String formAction) {
@@ -170,7 +183,7 @@ public class Gui extends JFrame implements ActionListener {
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[0]));
 		JTextField txtEditId = new JTextField(referee.getId());
 		txtEditId.setMaximumSize(txtEditId.getPreferredSize());
-		txtEditId.setEditable(formAction.equals(Gui.FORM_ADD));
+		txtEditId.setEditable(false);
 		addFormInput.add(txtEditId);
 		
 		// ----------------------- FIRST NAME ---------------------------------
@@ -189,20 +202,35 @@ public class Gui extends JFrame implements ActionListener {
 		
 		// ---------------------- QUALIFICAITONS ------------------------------
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[3]));
-		JTextField txtEditQualification = new JTextField(referee.getQualification().toString());
-		txtEditQualification.setMaximumSize(txtEditQualification.getPreferredSize());
-		txtEditQualification.setEditable(formAction.equals(Gui.FORM_ADD));
-		txtEditQualification.addFocusListener(new FocusListener() {
+		JPanel cbQualificationsPanel = new JPanel();
+		
+		JComboBox<String> cbAwardingBodies = new JComboBox<String>(Qualification.AWARDING_BODIES);
+		cbAwardingBodies.setSelectedIndex(referee.getQualification().getAwardingBodyIndex());
+		cbAwardingBodies.setMaximumSize(cbAwardingBodies.getPreferredSize());
+		cbAwardingBodies.setEnabled(formAction.equals(Gui.FORM_ADD));
+		cbAwardingBodies.addItemListener(new ItemListener() {
 			@Override
-			public void focusGained(FocusEvent arg0) {}
-			@Override
-			public void focusLost(FocusEvent arg0) {referee.setQualification(
-					new Qualification(txtEditQualification.getText().trim()));}
+			public void itemStateChanged(ItemEvent arg0) {
+				referee.getQualification().setAwardingBody(cbAwardingBodies.getSelectedItem().toString());
+			}
 		});
-		addFormInput.add(txtEditQualification);
+		cbQualificationsPanel.add(cbAwardingBodies);
+		
+		JComboBox<Short> cbQualificationLevel = new JComboBox<Short>(Qualification.LEVELS);
+		cbQualificationLevel.setSelectedIndex(referee.getQualification().getLevelIndex());
+		cbQualificationLevel.setMaximumSize(cbAwardingBodies.getPreferredSize());
+		cbQualificationLevel.setEnabled(formAction.equals(Gui.FORM_ADD));
+		cbQualificationLevel.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				referee.getQualification().setLevel((short)cbQualificationLevel.getSelectedItem());
+			}
+		});
+		cbQualificationsPanel.add(cbQualificationLevel);
+		addFormInput.add(cbQualificationsPanel);
 		
 		// ----------------------- ALLOCATIONS --------------------------------
-		addFormInput.add(new JLabel(Referee.FIELD_NAMES[4]));
+		addFormInput.add(new JLabel(Referee.FIELD_NAMES[4]));		
 		JTextField txtEditAllocations = new JTextField(Integer.toString(referee.getAllocations()));
 		txtEditAllocations.setMaximumSize(txtEditAllocations.getPreferredSize());
 		txtEditAllocations.setEditable(formAction.equals(Gui.FORM_ADD));
@@ -275,35 +303,46 @@ public class Gui extends JFrame implements ActionListener {
 				switch (btnAddOrEdit.getText()) {
 					case Gui.FORM_EDIT : 
 						btnAddOrEdit.setText(Gui.FORM_SAVE);
-						txtEditQualification.setEditable(true);
+						cbAwardingBodies.setEnabled(true);
+						cbQualificationLevel.setEnabled(true);
 						cbHomeAreas.setEnabled(true);
 						cbNorth.setEnabled(true);
 						cbCentral.setEnabled(true);
 						cbSouth.setEnabled(true);
 						break;
 					case Gui.FORM_SAVE :
-						// Check qualification
-						if (!"".equals(referee.getQualification().toString())) {
-							if (!"".equals(referee.getTravelAreas().toString())) {
-								referee.setHomeArea(cbHomeAreas.getSelectedItem().toString());
-								if (fileStore.updateReferee(referee)) {
-									refreshTableData();
-									JOptionPane.showMessageDialog(null, "Referee details have been updated.",
-											"New Data", JOptionPane.INFORMATION_MESSAGE);
-									btnAddOrEdit.setText(Gui.FORM_SAVE);
-									showAddOrEditForm(Gui.FORM_EDIT);
-								};
-							} else {
-								JOptionPane.showMessageDialog(null, TravelAreas.getAdvice(),
-									"Invalid input", JOptionPane.WARNING_MESSAGE);
-							}
-						} else {
-							JOptionPane.showMessageDialog(null, Qualification.getAdvice(),
-								"Invalid input", JOptionPane.WARNING_MESSAGE);							
-						} 
+						if (validateTravelArea()) {
+							if (fileStore.updateReferee(referee)) {
+								refreshTableData();
+								JOptionPane.showMessageDialog(null, "Referee details have been updated.",
+										"New Data", JOptionPane.INFORMATION_MESSAGE);
+								btnAddOrEdit.setText(Gui.FORM_SAVE);
+								showAddOrEditForm(Gui.FORM_EDIT);
+							};
+						}  
 						break;
-					case Gui.FORM_ADD : 
-						System.out.println("add"); 
+					case Gui.FORM_ADD :
+						if (validateName(txtEditFirstName.getText()) 
+								&& validateName(txtEditLastName.getText())) {
+							referee.setFirstName(txtEditFirstName.getText().trim());
+							referee.setLastName(txtEditLastName.getText().trim());
+							if (validateAllocations(txtEditAllocations.getText().trim())
+									&& validateTravelArea()) {
+									referee.setId(fileStore.getRefereeId(referee));
+									if (fileStore.addReferee(referee)) {
+										JOptionPane.showMessageDialog(null, 
+											"New Referee has been added.",
+											"New Referee", JOptionPane.INFORMATION_MESSAGE);
+									} else {
+										JOptionPane.showMessageDialog(null, 
+												"There was a error. "
+												+ "Check if the referee does not exist already.",
+												"New Referee", JOptionPane.WARNING_MESSAGE);
+									}
+									refreshTableData();
+									showAddOrEditForm(Gui.FORM_EDIT);
+								} 
+						}
 						break;
 					default: 
 						break;
@@ -319,9 +358,11 @@ public class Gui extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (fileStore.removeReferee(referee)) {
+					runSearch(referee.getFirstName(),referee.getLastName());
 					refreshTableData();
-					JOptionPane.showMessageDialog(null, "Referee has not been removed",
+					JOptionPane.showMessageDialog(null, "Referee has been removed",
 							"Entry removed", JOptionPane.INFORMATION_MESSAGE);
+					
 				} else {
 					JOptionPane.showMessageDialog(null, "Referee has not been found",
 						"No entry", JOptionPane.WARNING_MESSAGE);
@@ -344,10 +385,63 @@ public class Gui extends JFrame implements ActionListener {
 		editPanel.add(addFormButtons,BorderLayout.SOUTH);
 		this.revalidate();
 	}
+
+	private boolean validateName(String name) {
+		if(!name.matches(".*\\d.*")){
+			if (!name.trim().equals("")) {
+				return true;
+			} else {
+	    		JOptionPane.showMessageDialog(null, 
+	            	"This field cannot be empty.",
+	        		"Invalid input: " + !name.trim().equals(""), JOptionPane.WARNING_MESSAGE);
+				return false;	
+			}
+		} else{
+    		JOptionPane.showMessageDialog(null, 
+        		"This field cannot contain numbers.",
+    			"Invalid input: " + name, JOptionPane.WARNING_MESSAGE);
+    		return false;
+		}
+	}
 	
-	private void runSearch() {
-		String firstName = txtFirstName.getText().trim(); 
-		String lastName = txtLastName.getText().trim();
+    public boolean validateAllocations(String allocations) {
+		if(!allocations.matches(".*\\[a-zA-Z]+.*")){
+    		try {
+    			int alloc = Integer.parseInt(allocations.trim());
+    			if (alloc > -1) {
+    				referee.setAllocations(alloc);
+    				return true;
+    			} else {
+            		JOptionPane.showMessageDialog(null, 
+            			"Input must be a number greater or equal to 0",
+        				"Invalid input", JOptionPane.WARNING_MESSAGE);
+    				return false;	
+    			}
+    		} catch (NumberFormatException nfe) {
+        		JOptionPane.showMessageDialog(null, "Input must be a valid number.",
+					"Invalid input", JOptionPane.WARNING_MESSAGE);
+        		return false;
+    		}
+		} else{
+    		JOptionPane.showMessageDialog(null, 
+        		"This field cannot contain characters.",
+    			"Invalid input: " + allocations, JOptionPane.WARNING_MESSAGE);
+    		return false;
+		}
+    }
+	
+	private boolean validateTravelArea() {
+		String travelArea = referee.getTravelAreas().toString();
+		if (!"".equals(travelArea)) {
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(null, TravelAreas.getAdvice(),
+				"Invalid input", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+	}
+	
+	private void runSearch(String firstName, String lastName) {
 		referee = fileStore.search(firstName,lastName);
 		if (referee != null) {
 			showAddOrEditForm(Gui.FORM_EDIT);
@@ -360,19 +454,13 @@ public class Gui extends JFrame implements ActionListener {
 			editPanel.add(noResultPanel);
 			this.revalidate();
 		}
-		txtFirstName.setText("");
-		txtLastName.setText("");
-		btnSearch.setEnabled(false);
+		
 	}
 		
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		if (event.getSource() == btnSearch) {
-			runSearch();
-		} else if (event.getSource() == btnAdd) {
-			showAddOrEditForm(Gui.FORM_ADD);
-		} else if (event.getSource() == btnFormCancel) {
+		if (event.getSource() == btnFormCancel) {
 			editPanel.removeAll();
 			editPanel.add(new JPanel(new BorderLayout()));
 			this.revalidate();
