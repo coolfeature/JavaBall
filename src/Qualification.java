@@ -4,9 +4,11 @@ public class Qualification {
 	
 	public static final String[] AWARDING_BODIES = {"NJB","IJB"};
 	public static final Short[] LEVELS = {1,2,3,4};
+	public static final String[] CATEGORIES = {"Junior","Senior"};
 	
 	String awardingBody = Qualification.AWARDING_BODIES[0];
 	short level = Qualification.LEVELS[0];
+	String category = Qualification.CATEGORIES[0];
 	
 	/*
 	 * Since the input from the file and from the form will always be correct
@@ -14,6 +16,7 @@ public class Qualification {
 	 * AWARDING_BODIES[0] + LEVELS[0] when the qualification constructor 
 	 * String argument is not valid which should never occur. 
 	 */
+	
 	public Qualification (String qualification) {
 		this(inferAwardingBody(qualification),inferLevel(qualification));
 	}
@@ -92,6 +95,11 @@ public class Qualification {
 	@Override
 	public String toString() {
 		return awardingBody + level;
+	}
+	
+	public String getCategory() {
+		return level == Qualification.LEVELS[0] ? 
+			Qualification.CATEGORIES[0] : Qualification.CATEGORIES[1];
 	}
 
 	@Override
