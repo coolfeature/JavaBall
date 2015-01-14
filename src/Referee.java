@@ -8,15 +8,24 @@ public class Referee implements Comparable<Referee> {
 	String id;
 	String firstName;
 	String lastName;
-	String qualification;
+	Qualification qualification;
 	int allocations;
 	String homeArea;
-	String travelAreas;
+	TravelAreas travelAreas;
+
+	public Referee(String firstName,String lastName) {
+		this.id = "";
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.qualification = new Qualification("");
+		this.allocations = 0;
+		this.homeArea = Referee.HOME_AREAS[0];
+		this.travelAreas = new TravelAreas(this.homeArea);
+	}
 	
 	public Referee(String id,String firstName,String lastName
-			,String qualification,int allocations
-			,String homeArea,String travelAreas) {
-
+			,Qualification qualification,int allocations
+			,String homeArea,TravelAreas travelAreas) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -24,7 +33,6 @@ public class Referee implements Comparable<Referee> {
 		this.allocations = allocations;
 		this.homeArea = homeArea;
 		this.travelAreas = travelAreas;
-		
 	}
 	
 	public int getHomeAreaIndex() {
@@ -62,11 +70,11 @@ public class Referee implements Comparable<Referee> {
 		this.lastName = lastName;
 	}
 
-	public String getQualification() {
+	public Qualification getQualification() {
 		return qualification;
 	}
 
-	public void setQualification(String qualification) {
+	public void setQualification(Qualification qualification) {
 		this.qualification = qualification;
 	}
 
@@ -84,13 +92,14 @@ public class Referee implements Comparable<Referee> {
 
 	public void setHomeArea(String homeArea) {
 		this.homeArea = homeArea;
+		this.getTravelAreas().setHomeArea(homeArea);
 	}
 
-	public String getTravelAreas() {
+	public TravelAreas getTravelAreas() {
 		return travelAreas;
 	}
 
-	public void setTravelAreas(String travelAreas) {
+	public void setTravelAreas(TravelAreas travelAreas) {
 		this.travelAreas = travelAreas;
 	}
 

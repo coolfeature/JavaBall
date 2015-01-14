@@ -76,7 +76,7 @@ public class FileStore {
 		List<Referee> refereeList = readIn(FileStore.INPUT_FILE_NAME);
 		if (refereeList != null) {
 			Referee[] referees = refereeList.toArray(new Referee[refereeList.size()]);
-			Arrays.sort(referees);;
+			Arrays.sort(referees);
 			return referees;	
 		} else {
 			return null;
@@ -106,10 +106,10 @@ public class FileStore {
 					String id = line[0].trim();
 					String firstName = line[1];
 					String lastName = line[2];
-					String qualification = line[3];
+					Qualification qualification = new Qualification(line[3]);
 					int allocations = Integer.parseInt(line[4]);
 					String homeArea = line[5];
-					String travelAreas = line[6].trim();
+					TravelAreas travelAreas = new TravelAreas(homeArea,line[6].trim());
 					
 					Referee referee = new Referee(id,firstName,lastName
 							,qualification,allocations,homeArea,travelAreas);
@@ -131,5 +131,19 @@ public class FileStore {
 		for (Referee referee : referees) {
 			System.out.println(referee.toString());
 		}
+	}
+	
+	public String getRefereeId(String firstName,String lastName) {
+		String initials = firstName.substring(0,1) + lastName.substring(0,1);
+		int id = 1;
+		for (Referee referee : referees) {
+			if (referee.getId().substring(0,2).equals(initials)) {
+				int refereeId = Integer.parseInt(referee.getId().substring(2,3));
+				if (refereeId >= id) {
+					id = refereeId + 1;
+				}
+			}
+		}
+		return initials + id;
 	}
 }
