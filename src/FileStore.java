@@ -40,6 +40,27 @@ public class FileStore {
 		} 
 		return found;
 	}
+
+	public boolean updateReferee(Referee referee) {
+		if (search(referee) != null) {
+			removeReferee(referee);
+			return addReferee(referee);
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean addReferee(Referee referee) {
+		if (search(referee) == null) {
+			List<Referee> refereeList = new ArrayList<Referee>(Arrays.asList(referees));
+			refereeList.add(referee);
+			referees = refereeList.toArray(new Referee[refereeList.size()]);
+			Arrays.sort(referees);
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	public Referee search(String firstName, String lastName) {
 		Referee referee = null;
@@ -51,6 +72,17 @@ public class FileStore {
 			}
 		}
 		return referee;
+	}
+	
+	public Referee search(Referee referee) {
+		Referee exists = null;
+		for (Referee ref : referees) {
+			if (referee.idMatch(ref)) {
+				exists = ref;
+				break;
+			}
+		}
+		return exists;
 	}
 
 	public Object[][] getRefereesData() {

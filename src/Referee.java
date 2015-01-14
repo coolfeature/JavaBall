@@ -110,6 +110,10 @@ public class Referee implements Comparable<Referee> {
 				+ ", allocations=" + allocations + ", homeArea=" + homeArea
 				+ ", travelArea=" + travelAreas + "]";
 	}
+	
+	public boolean idMatch(Referee other) {
+		return this.getId().equals(other.getId()) ? true : false;
+	}
 
 
 	@Override

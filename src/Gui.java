@@ -192,6 +192,13 @@ public class Gui extends JFrame implements ActionListener {
 		JTextField txtEditQualification = new JTextField(referee.getQualification().toString());
 		txtEditQualification.setMaximumSize(txtEditQualification.getPreferredSize());
 		txtEditQualification.setEditable(formAction.equals(Gui.FORM_ADD));
+		txtEditQualification.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent arg0) {}
+			@Override
+			public void focusLost(FocusEvent arg0) {referee.setQualification(
+					new Qualification(txtEditQualification.getText().trim()));}
+		});
 		addFormInput.add(txtEditQualification);
 		
 		// ----------------------- ALLOCATIONS --------------------------------
@@ -276,12 +283,16 @@ public class Gui extends JFrame implements ActionListener {
 						break;
 					case Gui.FORM_SAVE :
 						// Check qualification
-						Qualification newQualification = 
-							new Qualification(txtEditQualification.getText().trim());
-						if (!"".equals(newQualification.toString())) {
+						if (!"".equals(referee.getQualification().toString())) {
 							if (!"".equals(referee.getTravelAreas().toString())) {
 								referee.setHomeArea(cbHomeAreas.getSelectedItem().toString());
-								System.out.println("SAVE " + referee.toString());
+								if (fileStore.updateReferee(referee)) {
+									refreshTableData();
+									JOptionPane.showMessageDialog(null, "Referee details have been updated.",
+											"New Data", JOptionPane.INFORMATION_MESSAGE);
+									btnAddOrEdit.setText(Gui.FORM_SAVE);
+									showAddOrEditForm(Gui.FORM_EDIT);
+								};
 							} else {
 								JOptionPane.showMessageDialog(null, TravelAreas.getAdvice(),
 									"Invalid input", JOptionPane.WARNING_MESSAGE);
