@@ -6,12 +6,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class FileStore {
+public class DataSource {
 	
 	public static final String INPUT_FILE_NAME = "RefereesIn.txt";
+	public static final short MAX_REFEREES = 12;
 	private Referee[] referees = null;
 	
-	public FileStore() {
+	public DataSource() {
 		this.referees = readIn();
 	}
 	
@@ -51,12 +52,16 @@ public class FileStore {
 	}
 	
 	public boolean addReferee(Referee referee) {
-		if (search(referee) == null) {
-			List<Referee> refereeList = new ArrayList<Referee>(Arrays.asList(referees));
-			refereeList.add(referee);
-			referees = refereeList.toArray(new Referee[refereeList.size()]);
-			Arrays.sort(referees);
-			return true;
+		if (referees.length < DataSource.MAX_REFEREES) {
+			if (search(referee) == null) {
+				List<Referee> refereeList = new ArrayList<Referee>(Arrays.asList(referees));
+				refereeList.add(referee);
+				referees = refereeList.toArray(new Referee[refereeList.size()]);
+				Arrays.sort(referees);
+				return true;
+			} else {
+				return false;
+			}	
 		} else {
 			return false;
 		}
@@ -105,7 +110,7 @@ public class FileStore {
 	}
 	
 	private Referee[] readIn() {
-		List<Referee> refereeList = readIn(FileStore.INPUT_FILE_NAME);
+		List<Referee> refereeList = readIn(DataSource.INPUT_FILE_NAME);
 		if (refereeList != null) {
 			Referee[] referees = refereeList.toArray(new Referee[refereeList.size()]);
 			Arrays.sort(referees);
