@@ -2,7 +2,6 @@ package n.models;
 
 public class Referee implements Comparable<Referee> {
 	
-	public static final String[] HOME_AREAS = {"North","Central","South"};
 	public static final String[] FIELD_NAMES = {"ID","FIRST NAME","LAST NAME"
 		,"QUALIFICATION","ALLOCATIONS","HOME AREA","TRAVEL AREA"};
 	
@@ -11,7 +10,7 @@ public class Referee implements Comparable<Referee> {
 	String lastName;
 	Qualification qualification;
 	int allocations;
-	String homeArea;
+	Area homeArea;
 	TravelAreas travelAreas;
 
 	public Referee(String firstName,String lastName) {
@@ -20,13 +19,13 @@ public class Referee implements Comparable<Referee> {
 		this.lastName = lastName;
 		this.qualification = new Qualification("");
 		this.allocations = 0;
-		this.homeArea = Referee.HOME_AREAS[0];
+		this.homeArea = new North(true);
 		this.travelAreas = new TravelAreas(this.homeArea);
 	}
 	
 	public Referee(String id,String firstName,String lastName
 			,Qualification qualification,int allocations
-			,String homeArea,TravelAreas travelAreas) {
+			,Area homeArea,TravelAreas travelAreas) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -34,17 +33,6 @@ public class Referee implements Comparable<Referee> {
 		this.allocations = allocations;
 		this.homeArea = homeArea;
 		this.travelAreas = travelAreas;
-	}
-	
-	public int getHomeAreaIndex() {
-		int homeAreaIndex = -1;
-		for (int i=0;i<Referee.HOME_AREAS.length;i++) {
-			if (Referee.HOME_AREAS[i].equals(this.getHomeArea())) {
-				homeAreaIndex = i;
-				break;
-			}
-		}
-		return homeAreaIndex;
 	}
 
 	public String getId() {
@@ -87,13 +75,19 @@ public class Referee implements Comparable<Referee> {
 		this.allocations = allocations;
 	}
 
-	public String getHomeArea() {
+	public Area getHomeArea() {
 		return homeArea;
 	}
 
-	public void setHomeArea(String homeArea) {
+	public void setHomeArea(Area homeArea) {
 		this.homeArea = homeArea;
-		this.getTravelAreas().setHomeArea(homeArea);
+		if (homeArea instanceof North) {
+			this.getTravelAreas().getNorth().setTravel(true);
+		} else if (homeArea instanceof Central) {
+			this.getTravelAreas().getCentral().setTravel(true);
+		} else if (homeArea instanceof South) {
+			this.getTravelAreas().getSouth().setTravel(true); 	
+		}
 	}
 
 	public TravelAreas getTravelAreas() {

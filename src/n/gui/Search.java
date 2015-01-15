@@ -22,9 +22,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import n.db.DataSource;
+import n.models.Area;
+import n.models.TravelAreas;
+import n.models.Central;
+import n.models.North;
 import n.models.Qualification;
 import n.models.Referee;
-import n.models.TravelAreas;
+import n.models.South;
 
 
 public class Search extends JPanel implements ActionListener {
@@ -66,7 +70,7 @@ public class Search extends JPanel implements ActionListener {
 		JTextField txtLastName = new JTextField("");
 		txtLastName.setMaximumSize(txtLastName.getPreferredSize());
 		
-		JButton btnSearch = new JButton("Search");
+		JButton btnSearch = new JButton(Search.TAB_NAME);
 		btnSearch.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -207,61 +211,96 @@ public class Search extends JPanel implements ActionListener {
 		
 		// ----------------------- HOME AREAS ---------------------------------
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[5]));
-		JComboBox<String> cbHomeAreas = new JComboBox<String>(Referee.HOME_AREAS);
-		cbHomeAreas.setSelectedIndex(referee.getHomeAreaIndex() == -1 ? 0 : 
-			referee.getHomeAreaIndex());
-		cbHomeAreas.setSelectedItem(referee.getHomeAreaIndex());
+		
+		JComboBox<Area> cbHomeAreas = new JComboBox<Area>(TravelAreas.AREAS);
+		/*
+		 *  The making of the combo box entry editable is temporarily needed
+		 *  for the setSelectedItem to take effect. 
+		 */
+		cbHomeAreas.setEditable(true);
+		cbHomeAreas.setSelectedItem(referee.getHomeArea());
+		cbHomeAreas.setEditable(false);
 		cbHomeAreas.setMaximumSize(cbHomeAreas.getPreferredSize());
 		cbHomeAreas.setEnabled(formAction.equals(Search.FORM_ADD));
-		cbHomeAreas.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent arg0) {
-				referee.setHomeArea(cbHomeAreas.getSelectedItem().toString());
-			}
-		});
 		addFormInput.add(cbHomeAreas);
 		
 		// ---------------------- TRAVEL AREAS --------------------------------
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[6]));
 		JPanel cbPanel = new JPanel();
 		JCheckBox cbNorth = new JCheckBox();
-		cbNorth.setText(Referee.HOME_AREAS[0]);
-		cbNorth.setSelected(referee.getTravelAreas().isNorth());
-		cbNorth.setEnabled(formAction.equals(Search.FORM_ADD));
+		cbNorth.setText(referee.getTravelAreas().getNorth().toString());
+		cbNorth.setSelected(referee.getTravelAreas().getNorth().getTravel());
+		if (referee.getHomeArea() instanceof North) {
+			cbNorth.setEnabled(false);
+		} else {
+			cbNorth.setEnabled(formAction.equals(Search.FORM_ADD));
+		}
 		cbNorth.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
-				referee.getTravelAreas().setNorth(cbNorth.isSelected());
+				referee.getTravelAreas().getNorth().setTravel(cbNorth.isSelected());
 			}
 		});
 		cbPanel.add(cbNorth);
 		
 		JCheckBox cbCentral = new JCheckBox();
-		cbCentral.setText(Referee.HOME_AREAS[1]);
-		cbCentral.setSelected(referee.getTravelAreas().isCentral());
-		cbCentral.setEnabled(formAction.equals(Search.FORM_ADD));
+		cbCentral.setText(referee.getTravelAreas().getCentral().toString());
+		cbCentral.setSelected(referee.getTravelAreas().getCentral().getTravel());
+		if (referee.getHomeArea() instanceof Central) {
+			cbCentral.setEnabled(false);
+		} else {
+			cbCentral.setEnabled(formAction.equals(Search.FORM_ADD));
+		}
 		cbCentral.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
-				referee.getTravelAreas().setCentral(cbCentral.isSelected());
+				referee.getTravelAreas().getCentral().setTravel(cbCentral.isSelected());
 			}
 		});
 		cbPanel.add(cbCentral);
 		
 		JCheckBox cbSouth = new JCheckBox();
-		cbSouth.setText(Referee.HOME_AREAS[2]);
-		cbSouth.setSelected(referee.getTravelAreas().isSouth());
-		cbSouth.setEnabled(formAction.equals(Search.FORM_ADD));
+		cbSouth.setText(referee.getTravelAreas().getSouth().toString());
+		cbSouth.setSelected(referee.getTravelAreas().getSouth().getTravel());
+		if (referee.getHomeArea() instanceof South) {
+			cbSouth.setEnabled(false);
+		} else {
+			cbSouth.setEnabled(formAction.equals(Search.FORM_ADD));
+		}
 		cbSouth.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
-				referee.getTravelAreas().setSouth(cbSouth.isSelected());
+				referee.getTravelAreas().getSouth().setTravel(cbSouth.isSelected());;
 			}
 		});
 		cbPanel.add(cbSouth);
 		
 		cbPanel.setMaximumSize(cbPanel.getPreferredSize());
 		addFormInput.add(cbPanel);
+		
+		// ---- home areas listener
+		cbHomeAreas.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				Area selected = (Area)cbHomeAreas.getSelectedItem();
+				referee.setHomeArea(selected);
+				cbNorth.setEnabled(true);
+				cbCentral.setEnabled(true);
+				cbSouth.setEnabled(true);
+				if (selected instanceof North) { 
+					cbNorth.setSelected(true); 
+					cbNorth.setEnabled(false);
+				}
+				if (selected instanceof Central) {
+					cbCentral.setSelected(true);
+					cbCentral.setEnabled(false);
+				}
+				if (selected instanceof South) {
+					cbSouth.setSelected(true);
+					cbSouth.setEnabled(false);
+				}
+			}
+		});
 		
 		// ------------------------- BUTTONS ----------------------------------
 		JButton btnAddOrEdit = new JButton(formAction.equals(Search.FORM_EDIT) 
@@ -280,23 +319,20 @@ public class Search extends JPanel implements ActionListener {
 						cbSouth.setEnabled(true);
 						break;
 					case Search.FORM_SAVE :
-						if (validateTravelArea()) {
-							if (fileStore.updateReferee(referee)) {
-								refereesTab.refreshTableData();
-								JOptionPane.showMessageDialog(null, "Referee details have been updated.",
-										"New Data", JOptionPane.INFORMATION_MESSAGE);
-								btnAddOrEdit.setText(Search.FORM_SAVE);
-								showAddOrEditForm(Search.FORM_EDIT);
-							};
-						}  
+						if (fileStore.updateReferee(referee)) {
+							refereesTab.refreshTableData();
+							JOptionPane.showMessageDialog(null, "Referee details have been updated.",
+									"New Data", JOptionPane.INFORMATION_MESSAGE);
+							btnAddOrEdit.setText(Search.FORM_SAVE);
+							showAddOrEditForm(Search.FORM_EDIT);
+						};
 						break;
 					case Search.FORM_ADD :
 						if (validateName(txtEditFirstName.getText()) 
 								&& validateName(txtEditLastName.getText())) {
 							referee.setFirstName(txtEditFirstName.getText().trim());
 							referee.setLastName(txtEditLastName.getText().trim());
-							if (validateAllocations(txtEditAllocations.getText().trim())
-									&& validateTravelArea()) {
+							if (validateAllocations(txtEditAllocations.getText().trim())) {
 									referee.setId(fileStore.getRefereeId(referee));
 									if (fileStore.addReferee(referee)) {
 										JOptionPane.showMessageDialog(null, 
@@ -398,17 +434,7 @@ public class Search extends JPanel implements ActionListener {
     		return false;
 		}
     }
-	
-	private boolean validateTravelArea() {
-		String travelArea = referee.getTravelAreas().toString();
-		if (!"".equals(travelArea)) {
-			return true;
-		} else {
-			JOptionPane.showMessageDialog(null, TravelAreas.getAdvice(),
-				"Invalid input", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}
-	}
+
 	
 	private void runSearch(String firstName, String lastName) {
 		referee = fileStore.search(firstName,lastName);
