@@ -47,11 +47,11 @@ public class Search extends JPanel implements ActionListener {
 	JTable table;
 	Referee referee;
 	
-	DataSource fileStore;
+	DataSource dataSource;
 	Referees refereesTab;
 	
 	public Search(DataSource fileStore,Referees refereesTab) {
-		this.fileStore = fileStore;
+		this.dataSource = fileStore;
 		this.refereesTab = refereesTab;
 		this.setLayout(new BorderLayout());
 		layoutComponents();
@@ -319,7 +319,7 @@ public class Search extends JPanel implements ActionListener {
 						cbSouth.setEnabled(true);
 						break;
 					case Search.FORM_SAVE :
-						if (fileStore.updateReferee(referee)) {
+						if (dataSource.updateReferee(referee)) {
 							refereesTab.refreshTableData();
 							JOptionPane.showMessageDialog(null, "Referee details have been updated.",
 									"New Data", JOptionPane.INFORMATION_MESSAGE);
@@ -333,8 +333,8 @@ public class Search extends JPanel implements ActionListener {
 							referee.setFirstName(txtEditFirstName.getText().trim());
 							referee.setLastName(txtEditLastName.getText().trim());
 							if (validateAllocations(txtEditAllocations.getText().trim())) {
-									referee.setId(fileStore.getRefereeId(referee));
-									if (fileStore.addReferee(referee)) {
+									referee.setId(dataSource.getRefereeId(referee));
+									if (dataSource.addReferee(referee)) {
 										JOptionPane.showMessageDialog(null, 
 											"New Referee has been added.",
 											"New Referee", JOptionPane.INFORMATION_MESSAGE);
@@ -362,7 +362,7 @@ public class Search extends JPanel implements ActionListener {
 		btnFormDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (fileStore.removeReferee(referee)) {
+				if (dataSource.removeReferee(referee)) {
 					runSearch(referee.getFirstName(),referee.getLastName());
 					refereesTab.refreshTableData();
 					JOptionPane.showMessageDialog(null, "Referee has been removed",
@@ -437,7 +437,7 @@ public class Search extends JPanel implements ActionListener {
 
 	
 	private void runSearch(String firstName, String lastName) {
-		referee = fileStore.search(firstName,lastName);
+		referee = dataSource.search(firstName,lastName);
 		if (referee != null) {
 			showAddOrEditForm(Search.FORM_EDIT);
 		} else {

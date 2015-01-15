@@ -4,12 +4,11 @@ package n.models;
 public class Qualification {
 	
 	public static final String[] AWARDING_BODIES = {"NJB","IJB"};
-	public static final Short[] LEVELS = {1,2,3,4};
-	public static final String[] CATEGORIES = {"Junior","Senior"};
+	public static final Short[] LEVELS = {1,2,3,4};;
 	
 	String awardingBody = Qualification.AWARDING_BODIES[0];
 	short level = Qualification.LEVELS[0];
-	String category = Qualification.CATEGORIES[0];
+	String category = Match.JUNIOR;
 	
 	/*
 	 * Since the input from the file and from the form will always be correct
@@ -100,7 +99,7 @@ public class Qualification {
 	
 	public String getCategory() {
 		return level == Qualification.LEVELS[0] ? 
-			Qualification.CATEGORIES[0] : Qualification.CATEGORIES[1];
+			Match.JUNIOR : Match.SENIOR;
 	}
 
 	@Override

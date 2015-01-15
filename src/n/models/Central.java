@@ -45,6 +45,10 @@ public class Central implements Area {
 	public String getTravelFlag() {
 		return getTravel() ? "Y" : "N";
 	}
+	@Override
+	public boolean isAdjacent(Area other) {
+		return true;
+	}
 	
 	
 	

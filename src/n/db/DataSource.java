@@ -203,4 +203,13 @@ public class DataSource {
 		}
 		return initials + id;
 	}
+	
+	public List<Referee> getMatchCandidates(Area matchArea, String matchCategory) {
+		Referee[] matchCandidates = referees;
+		for (Referee referee : matchCandidates) {
+			referee.setMatchArea(matchArea);
+			referee.setMatchCategory(matchCategory);
+		}
+		return Arrays.asList(matchCandidates);
+	}
 }

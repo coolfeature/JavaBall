@@ -1,17 +1,26 @@
 package n.models;
 
+import java.util.List;
+
+import n.db.DataSource;
+
 public class Match {
 
-	short week;
-	String area;
-	String category;
-	Referee[] allocatedReferees;
+	public static final String JUNIOR = "Junior";
+	public static final String SENIOR = "Senior";
+	public static final String[] CATEGORIES = {JUNIOR,SENIOR};
 	
-	public Match(short week,String area,String category) {
+	short week;
+	Area area;
+	String category;
+	List<Referee> allocatedReferees;
+	DataSource dataSource;
+	
+	public Match(short week,Area area,String category,DataSource dataSource) {
 		this.week = week;
 		this.area = area;
 		this.category = category;
-		this.allocatedReferees = null; 
+		this.allocatedReferees = dataSource.getMatchCandidates(area,category); 
 	}
 
 	public short getWeek() {
@@ -22,11 +31,11 @@ public class Match {
 		this.week = week;
 	}
 
-	public String getArea() {
+	public Area getArea() {
 		return area;
 	}
 
-	public void setArea(String area) {
+	public void setArea(Area area) {
 		this.area = area;
 	}
 
@@ -38,46 +47,41 @@ public class Match {
 		this.category = category;
 	}
 	
-	/*
-	 * The referees should suitably qualified in order to be considered for 
-	 * allocation then the preference is given with respect to 
-	 * 1) area
-	 * 2) the least number of allocations
-	 * 
-	 * After that, referees are considered who live in adjacent areas and
-	 * are prepared to travel to the stadium area and have the least number
-	 * of allocations compared to other referees in this category.
-	 * 
-	 * Finally the referees who live in non-adjacent area but who are willing
-	 * to travel to the destination area and have the least number of 
-	 * allocations compared to other referees in this category are considered.
-	 */
+
 	public void allocateReferees(Referee[] registeredReferees) {
-		Referee[] result = new Referee[registeredReferees.length];
-		short resultIndex = 0;
+		Referee[] selected = new Referee[registeredReferees.length];
+		short index = 0;
 		// Pre-select referees with suitable qualifications
 		for (int i=0;i<registeredReferees.length;i++) {
 			if (registeredReferees[i].getQualification().getCategory().equals(this.getCategory())) {
-				result[resultIndex] = registeredReferees[i];
-				resultIndex++;
+				selected[index] = registeredReferees[i];
+				index++;
 			}
 		}
-		// Sort the pre-selected referees if any by the number of allocations
-		if (resultIndex != 0) {
-			Referee[] preAllocated = new Referee[resultIndex + 1];
-			for (int i=0;i<result.length;i++) {
-				if (result[i] != null) {
-					
+		if (index != 0) {
+			Referee[] qualified = new Referee[index+1];
+			System.arraycopy(selected, 0, qualified, 0, qualified.length);
+			selected = qualified;
+			index = 0;
+			// Sort the qualified referees by area
+			for (int i=0;i<selected.length;i++) {
+				//iterate to find a non match
+				if (this.getArea().isAdjacent(selected[i].getHomeArea())) {
+					//take the 
 				}
 			}
 			
+		} else {
+			selected = null;
 		}
 	}
 
+
 	@Override
 	public String toString() {
-		return "Match [week=" + week + ", area=" + area + ", level=" + category
-				+ "]";
+		return "Match [week=" + week + ", area=" + area + ", category="
+				+ category + ", allocatedReferees=" + allocatedReferees
+				+ ", dataSource=" + dataSource + "]";
 	}
 
 	@Override

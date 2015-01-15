@@ -33,4 +33,13 @@ public class North implements Area {
 	public String getTravelFlag() {
 		return getTravel() ? "Y" : "N";
 	}
+
+	@Override
+	public boolean isAdjacent(Area other) {
+		if (other instanceof South) {
+			return true;
+		} else {
+			return false;	
+		}
+	}
 }
