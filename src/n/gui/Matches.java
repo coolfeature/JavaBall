@@ -3,13 +3,12 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import n.db.DataSource;
+import n.models.Match;
 import n.models.Referee;
 import n.models.South;
 
@@ -28,9 +27,9 @@ public class Matches extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				List<Referee> candidates = fileStore.getMatchCandidates(new South(), "Senior");
-				Collections.sort(candidates, Referee.MatchCandidates);
-				for (Referee r : candidates) {
+				Referee[] candidates = fileStore.getReferees();
+				Referee[] selected = new Match((short)2,new South(),"Senior").allocateReferees(candidates);
+				for (Referee r : selected) {
 					System.out.println(r.toString());
 				}
 				

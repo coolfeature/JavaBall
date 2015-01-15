@@ -1,7 +1,5 @@
 package n.models;
 
-import java.util.Comparator;
-
 public class Referee implements Comparable<Referee> {
 	
 	public static final String[] FIELD_NAMES = {"ID","FIRST NAME","LAST NAME"
@@ -14,8 +12,6 @@ public class Referee implements Comparable<Referee> {
 	int allocations;
 	Area homeArea;
 	TravelAreas travelAreas;
-	Area matchArea;
-	String matchCategory;
 	
 
 	public Referee(String firstName,String lastName) {
@@ -84,22 +80,6 @@ public class Referee implements Comparable<Referee> {
 		return homeArea;
 	}
 
-	public Area getMatchArea() {
-		return matchArea;
-	}
-
-	public void setMatchArea(Area matchArea) {
-		this.matchArea = matchArea;
-	}
-
-	public String getMatchCategory() {
-		return matchCategory;
-	}
-
-	public void setMatchCategory(String matchCategory) {
-		this.matchCategory = matchCategory;
-	}
-
 	public void setHomeArea(Area homeArea) {
 		this.homeArea = homeArea;
 		if (homeArea instanceof North) {
@@ -124,7 +104,8 @@ public class Referee implements Comparable<Referee> {
 		return "Referee [id=" + id + ", firstName=" + firstName + ", lastName="
 				+ lastName + ", qualification=" + qualification
 				+ ", allocations=" + allocations + ", homeArea=" + homeArea
-				+ ", travelArea=" + travelAreas + "]";
+				+ ", travelArea=" + travelAreas + ", category=" 
+				+ getQualification().getCategory() + "]";
 	}
 	
 	public boolean idMatch(Referee other) {
@@ -193,32 +174,4 @@ public class Referee implements Comparable<Referee> {
 			return areEqual;
 		}
 	}
-
-	/*
-	 * The referees should suitably qualified in order to be considered for 
-	 * allocation then the preference is given with respect to 
-	 * 1) area
-	 * 2) the least number of allocations
-	 * 
-	 * After that, referees are considered who live in adjacent areas and
-	 * are prepared to travel to the stadium area and have the least number
-	 * of allocations compared to other referees in this category.
-	 * 
-	 * Finally the referees who live in non-adjacent area but who are willing
-	 * to travel to the destination area and have the least number of 
-	 * allocations compared to other referees in this category are considered.
-	 */
-    public static Comparator<Referee> MatchCandidates = new Comparator<Referee>() {
-    	 
-        @Override
-        public int compare(Referee ref1, Referee ref2) {
-        	int result = 0;
-			if (ref1.getQualification().getCategory().equals(ref1.getMatchCategory())) {
-				result = 1;
-			} else {
-				result = -1;
-			}
-            return result;
-        }
-    };
 }
