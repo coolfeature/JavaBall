@@ -8,10 +8,10 @@ public class Chart extends JPanel {
 
 	public static final String TAB_NAME = "Chart";
 	private static final long serialVersionUID = 1L;
-	DataSource fileStore;
+	DataSource dataSource;
 	
 	public Chart(DataSource fileStore) {
-		this.fileStore = fileStore;
+		this.dataSource = fileStore;
 	}
 
 	

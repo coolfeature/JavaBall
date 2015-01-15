@@ -7,9 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import n.models.Area;
+import n.models.TravelAreas;
+import n.models.Central;
+import n.models.North;
 import n.models.Qualification;
 import n.models.Referee;
-import n.models.TravelAreas;
+import n.models.South;
 
 public class DataSource {
 	
@@ -150,8 +154,15 @@ public class DataSource {
 					String lastName = line[2];
 					Qualification qualification = new Qualification(line[3]);
 					int allocations = Integer.parseInt(line[4]);
-					String homeArea = line[5];
-					TravelAreas travelAreas = new TravelAreas(homeArea,line[6].trim());
+					Area homeArea = line[5].equals("North") ? new North(true) : 
+						line[5].equals("Central") ? new Central(true) :
+							line[5].equals("South") ? new South(true) : null;
+					
+					String travels = line[6].trim();
+					North north = travels.substring(0,1).equals("Y") ? new North(true) : new North();
+					Central central = travels.substring(1,2).equals("Y") ? new Central(true) : new Central() ;
+					South south = travels.substring(2,3).equals("Y") ? new South(true) : new South() ; 
+					TravelAreas travelAreas = new TravelAreas(north,central,south);
 					
 					Referee referee = new Referee(id,firstName,lastName
 							,qualification,allocations,homeArea,travelAreas);

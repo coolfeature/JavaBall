@@ -16,14 +16,14 @@ public class Container extends JFrame {
 
 	public static final String APP_NAME = "JavaBall";
 	private static final long serialVersionUID = 1L;
-	DataSource fileStore = null;
+	DataSource dataSource = null;
 	
 	public Container(DataSource fileStore) {
 		this.setLocation(200, 200);
 		this.setSize(600, 500);
 		this.setTitle(APP_NAME);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.fileStore = fileStore;
+		this.dataSource = fileStore;
 		this.layoutComponents();
 	}
 
@@ -31,23 +31,23 @@ public class Container extends JFrame {
 		JPanel container = new JPanel(new BorderLayout());
 		JTabbedPane tabbedPane = new JTabbedPane();
 
-		Referees refereesTab = new Referees(fileStore);
+		Referees refereesTab = new Referees(dataSource);
 		tabbedPane.addTab(Referees.TAB_NAME, refereesTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-		Search searchTab = new Search(fileStore,refereesTab);
+		Search searchTab = new Search(dataSource,refereesTab);
 		tabbedPane.addTab(Search.TAB_NAME, searchTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 
-		Chart chartTab = new Chart(fileStore);
+		Chart chartTab = new Chart(dataSource);
 		tabbedPane.addTab(Chart.TAB_NAME, chartTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
 		
-		Allocation allocationTab = new Allocation(fileStore);
+		Allocation allocationTab = new Allocation(dataSource);
 		tabbedPane.addTab(Allocation.TAB_NAME, allocationTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
 		
-		Matches matchesTab = new Matches(fileStore);
+		Matches matchesTab = new Matches(dataSource);
 		tabbedPane.addTab(Matches.TAB_NAME, matchesTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_5);
 		

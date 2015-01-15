@@ -15,11 +15,11 @@ public class Referees extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String TAB_NAME = "Referees";
-	DataSource fileStore = null;
+	DataSource dataSource = null;
 	JTable table = null;
 			
 	public Referees(DataSource fileStore) {
-		this.fileStore = fileStore;
+		this.dataSource = fileStore;
 		this.setLayout(new BorderLayout());
 		table = new JTable();
 		refreshTableData();
@@ -30,7 +30,7 @@ public class Referees extends JPanel {
 	
 	public void refreshTableData() {
 		DefaultTableModel model = new DefaultTableModel(
-			fileStore.getRefereesData(),Referee.FIELD_NAMES);
+			dataSource.getRefereesData(),Referee.FIELD_NAMES);
 		table.setModel(model);
 	}
 
