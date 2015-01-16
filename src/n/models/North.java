@@ -37,9 +37,9 @@ public class North implements Area {
 	@Override
 	public boolean isAdjacent(Area other) {
 		if (other instanceof South) {
-			return true;
+			return false;
 		} else {
-			return false;	
+			return true;	
 		}
 	}
 }

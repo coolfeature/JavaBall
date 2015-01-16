@@ -43,6 +43,16 @@ public class TravelAreas {
 	public void setSouth(South south) {
 		this.south = south;
 	}
+	
+	public boolean travelsTo(Area area) {
+		if (area instanceof North) {
+			return getNorth().getTravel();
+		} else if (area instanceof Central) {
+			return getCentral().getTravel();
+		} else {
+			return getSouth().getTravel();
+		}
+	}
 
 	@Override
 	public String toString() {
