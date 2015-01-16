@@ -31,16 +31,16 @@ import n.models.Referee;
 import n.models.South;
 
 
-public class Search extends JPanel implements ActionListener {
+public class Manage extends JPanel implements ActionListener {
 	
-	public static final String TAB_NAME = "Search";
+	public static final String TAB_NAME = "Manage";
 	private static final long serialVersionUID = 1L;
 	
-	private static final String FORM_EDIT = "Edit";
-	private static final String FORM_SAVE = "Save";
-	private static final String FORM_ADD = "Add";
-	private static final String FORM_CANCEL = "Cancel";
-	private static final String FORM_DELETE = "Delete";
+	private static final String REFEREE_EDIT = "Edit";
+	private static final String REFEREE_SAVE = "Save";
+	private static final String REFEREE_ADD = "Add";
+	private static final String REFEREE_CANCEL = "Cancel";
+	private static final String REFEREE_DELETE = "Delete";
 	
 	JPanel editPanel;
 	JButton btnFormCancel;
@@ -50,7 +50,7 @@ public class Search extends JPanel implements ActionListener {
 	DataSource dataSource;
 	Referees refereesTab;
 	
-	public Search(DataSource fileStore,Referees refereesTab) {
+	public Manage(DataSource fileStore,Referees refereesTab) {
 		this.dataSource = fileStore;
 		this.refereesTab = refereesTab;
 		this.setLayout(new BorderLayout());
@@ -70,7 +70,7 @@ public class Search extends JPanel implements ActionListener {
 		JTextField txtLastName = new JTextField("");
 		txtLastName.setMaximumSize(txtLastName.getPreferredSize());
 		
-		JButton btnSearch = new JButton(Search.TAB_NAME);
+		JButton btnSearch = new JButton(Manage.TAB_NAME);
 		btnSearch.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -122,11 +122,11 @@ public class Search extends JPanel implements ActionListener {
 		JPanel addSection = new JPanel(new BorderLayout());
 		JLabel lblAddTitle = new JLabel("Add a new Referee",SwingConstants.CENTER);
 		addSection.add(lblAddTitle,BorderLayout.CENTER);
-		JButton btnAdd = new JButton(Search.FORM_ADD);
+		JButton btnAdd = new JButton(Manage.REFEREE_ADD);
 		btnAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showAddOrEditForm(Search.FORM_ADD);
+				showAddOrEditForm(Manage.REFEREE_ADD);
 			}
 		});
 		
@@ -147,7 +147,7 @@ public class Search extends JPanel implements ActionListener {
 	
 	private void showAddOrEditForm(String formAction) {
 		editPanel.removeAll();
-		if (formAction == Search.FORM_ADD) {
+		if (formAction == Manage.REFEREE_ADD) {
 			referee = new Referee("","");
 		} 
 		JPanel addFormInput = new JPanel(new GridLayout(Referee.FIELD_NAMES.length, 2));
@@ -163,14 +163,14 @@ public class Search extends JPanel implements ActionListener {
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[1]));
 		JTextField txtEditFirstName = new JTextField(referee.getFirstName());
 		txtEditFirstName.setMaximumSize(txtEditFirstName.getPreferredSize());
-		txtEditFirstName.setEditable(formAction.equals(Search.FORM_ADD));
+		txtEditFirstName.setEditable(formAction.equals(Manage.REFEREE_ADD));
 		addFormInput.add(txtEditFirstName);
 		
 		// ------------------------ LAST NAME ---------------------------------
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[2]));
 		JTextField txtEditLastName = new JTextField(referee.getLastName());
 		txtEditLastName.setMaximumSize(txtEditLastName.getPreferredSize());
-		txtEditLastName.setEditable(formAction.equals(Search.FORM_ADD));
+		txtEditLastName.setEditable(formAction.equals(Manage.REFEREE_ADD));
 		addFormInput.add(txtEditLastName);
 		
 		// ---------------------- QUALIFICAITONS ------------------------------
@@ -180,7 +180,7 @@ public class Search extends JPanel implements ActionListener {
 		JComboBox<String> cbAwardingBodies = new JComboBox<String>(Qualification.AWARDING_BODIES);
 		cbAwardingBodies.setSelectedIndex(referee.getQualification().getAwardingBodyIndex());
 		cbAwardingBodies.setMaximumSize(cbAwardingBodies.getPreferredSize());
-		cbAwardingBodies.setEnabled(formAction.equals(Search.FORM_ADD));
+		cbAwardingBodies.setEnabled(formAction.equals(Manage.REFEREE_ADD));
 		cbAwardingBodies.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
@@ -192,7 +192,7 @@ public class Search extends JPanel implements ActionListener {
 		JComboBox<Short> cbQualificationLevel = new JComboBox<Short>(Qualification.LEVELS);
 		cbQualificationLevel.setSelectedIndex(referee.getQualification().getLevelIndex());
 		cbQualificationLevel.setMaximumSize(cbAwardingBodies.getPreferredSize());
-		cbQualificationLevel.setEnabled(formAction.equals(Search.FORM_ADD));
+		cbQualificationLevel.setEnabled(formAction.equals(Manage.REFEREE_ADD));
 		cbQualificationLevel.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
@@ -206,7 +206,7 @@ public class Search extends JPanel implements ActionListener {
 		addFormInput.add(new JLabel(Referee.FIELD_NAMES[4]));		
 		JTextField txtEditAllocations = new JTextField(Integer.toString(referee.getAllocations()));
 		txtEditAllocations.setMaximumSize(txtEditAllocations.getPreferredSize());
-		txtEditAllocations.setEditable(formAction.equals(Search.FORM_ADD));
+		txtEditAllocations.setEditable(formAction.equals(Manage.REFEREE_ADD));
 		addFormInput.add(txtEditAllocations);
 		
 		// ----------------------- HOME AREAS ---------------------------------
@@ -221,7 +221,7 @@ public class Search extends JPanel implements ActionListener {
 		cbHomeAreas.setSelectedItem(referee.getHomeArea());
 		cbHomeAreas.setEditable(false);
 		cbHomeAreas.setMaximumSize(cbHomeAreas.getPreferredSize());
-		cbHomeAreas.setEnabled(formAction.equals(Search.FORM_ADD));
+		cbHomeAreas.setEnabled(formAction.equals(Manage.REFEREE_ADD));
 		addFormInput.add(cbHomeAreas);
 		
 		// ---------------------- TRAVEL AREAS --------------------------------
@@ -233,7 +233,7 @@ public class Search extends JPanel implements ActionListener {
 		if (referee.getHomeArea() instanceof North) {
 			cbNorth.setEnabled(false);
 		} else {
-			cbNorth.setEnabled(formAction.equals(Search.FORM_ADD));
+			cbNorth.setEnabled(formAction.equals(Manage.REFEREE_ADD));
 		}
 		cbNorth.addItemListener(new ItemListener() {
 			@Override
@@ -249,7 +249,7 @@ public class Search extends JPanel implements ActionListener {
 		if (referee.getHomeArea() instanceof Central) {
 			cbCentral.setEnabled(false);
 		} else {
-			cbCentral.setEnabled(formAction.equals(Search.FORM_ADD));
+			cbCentral.setEnabled(formAction.equals(Manage.REFEREE_ADD));
 		}
 		cbCentral.addItemListener(new ItemListener() {
 			@Override
@@ -265,7 +265,7 @@ public class Search extends JPanel implements ActionListener {
 		if (referee.getHomeArea() instanceof South) {
 			cbSouth.setEnabled(false);
 		} else {
-			cbSouth.setEnabled(formAction.equals(Search.FORM_ADD));
+			cbSouth.setEnabled(formAction.equals(Manage.REFEREE_ADD));
 		}
 		cbSouth.addItemListener(new ItemListener() {
 			@Override
@@ -303,14 +303,14 @@ public class Search extends JPanel implements ActionListener {
 		});
 		
 		// ------------------------- BUTTONS ----------------------------------
-		JButton btnAddOrEdit = new JButton(formAction.equals(Search.FORM_EDIT) 
-				? Search.FORM_EDIT : Search.FORM_ADD);
+		JButton btnAddOrEdit = new JButton(formAction.equals(Manage.REFEREE_EDIT) 
+				? Manage.REFEREE_EDIT : Manage.REFEREE_ADD);
 		btnAddOrEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				switch (btnAddOrEdit.getText()) {
-					case Search.FORM_EDIT : 
-						btnAddOrEdit.setText(Search.FORM_SAVE);
+					case Manage.REFEREE_EDIT : 
+						btnAddOrEdit.setText(Manage.REFEREE_SAVE);
 						cbAwardingBodies.setEnabled(true);
 						cbQualificationLevel.setEnabled(true);
 						cbHomeAreas.setEnabled(true);
@@ -318,16 +318,16 @@ public class Search extends JPanel implements ActionListener {
 						cbCentral.setEnabled(true);
 						cbSouth.setEnabled(true);
 						break;
-					case Search.FORM_SAVE :
+					case Manage.REFEREE_SAVE :
 						if (dataSource.updateReferee(referee)) {
 							refereesTab.refreshTableData();
 							JOptionPane.showMessageDialog(null, "Referee details have been updated.",
 									"New Data", JOptionPane.INFORMATION_MESSAGE);
-							btnAddOrEdit.setText(Search.FORM_SAVE);
-							showAddOrEditForm(Search.FORM_EDIT);
+							btnAddOrEdit.setText(Manage.REFEREE_SAVE);
+							showAddOrEditForm(Manage.REFEREE_EDIT);
 						};
 						break;
-					case Search.FORM_ADD :
+					case Manage.REFEREE_ADD :
 						if (validateName(txtEditFirstName.getText()) 
 								&& validateName(txtEditLastName.getText())) {
 							referee.setFirstName(txtEditFirstName.getText().trim());
@@ -345,7 +345,7 @@ public class Search extends JPanel implements ActionListener {
 												"New Referee", JOptionPane.WARNING_MESSAGE);
 									}
 									refereesTab.refreshTableData();
-									showAddOrEditForm(Search.FORM_EDIT);
+									showAddOrEditForm(Manage.REFEREE_EDIT);
 								} 
 						}
 						break;
@@ -355,10 +355,10 @@ public class Search extends JPanel implements ActionListener {
 			}
 		});
 		
-		btnFormCancel = new JButton(Search.FORM_CANCEL);
+		btnFormCancel = new JButton(Manage.REFEREE_CANCEL);
 		btnFormCancel.addActionListener(this);
 		
-		JButton btnFormDelete = new JButton(Search.FORM_DELETE);
+		JButton btnFormDelete = new JButton(Manage.REFEREE_DELETE);
 		btnFormDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -376,7 +376,7 @@ public class Search extends JPanel implements ActionListener {
 		});
 		
 		JPanel addFormButtons;
-		if (formAction.equals(Search.FORM_EDIT)) {
+		if (formAction.equals(Manage.REFEREE_EDIT)) {
 			addFormButtons = new JPanel(new GridLayout(1,3));
 			addFormButtons.add(btnAddOrEdit);
 			addFormButtons.add(btnFormCancel);
@@ -439,7 +439,7 @@ public class Search extends JPanel implements ActionListener {
 	private void runSearch(String firstName, String lastName) {
 		referee = dataSource.search(firstName,lastName);
 		if (referee != null) {
-			showAddOrEditForm(Search.FORM_EDIT);
+			showAddOrEditForm(Manage.REFEREE_EDIT);
 		} else {
 			JPanel noResultPanel = new JPanel(new BorderLayout());
 			JLabel lblNoResults = new JLabel("No Results");

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import n.models.Area;
+import n.models.Match;
 import n.models.TravelAreas;
 import n.models.Central;
 import n.models.North;
@@ -20,11 +21,20 @@ public class DataSource {
 	public static final String INPUT_FILE_NAME = "RefereesIn.txt";
 	public static final short MAX_REFEREES = 12;
 	private Referee[] referees = null;
+	private Match[] matches = null;
 	
 	public DataSource() {
 		this.referees = readIn();
 	}
 	
+	public Match[] getMatches() {
+		return matches;
+	}
+
+	public void setMatches(Match[] matches) {
+		this.matches = matches;
+	}
+
 	public Referee[] getReferees() {
 		return referees;
 	}
@@ -76,6 +86,22 @@ public class DataSource {
 		}
 	}
 	
+	public boolean addMatch(Match match) {
+		if (search(match) == null) {
+			List<Match> matchList = null;
+			if (matches==null) {	
+				matches = new Match[]{match};
+			} else {
+				matchList = new ArrayList<Match>(Arrays.asList(matches));	
+				matchList.add(match);
+				matches = matchList.toArray(new Match[matchList.size()]);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public Referee search(String firstName, String lastName) {
 		Referee referee = null;
 		for (Referee ref : referees) {
@@ -86,6 +112,17 @@ public class DataSource {
 			}
 		}
 		return referee;
+	}
+
+	public Match search(Match match) {
+		Match exists = null;
+		if (matches==null) return exists; 
+		for (Match m : matches) {
+			if (m.getWeek() == match.getWeek()) {
+				return m;
+			}
+		}
+		return exists;
 	}
 	
 	public Referee search(Referee referee) {
@@ -178,12 +215,6 @@ public class DataSource {
 			e.printStackTrace();
 		}
 		return referees;
-	}
-	
-	public void printReferees() {
-		for (Referee referee : referees) {
-			System.out.println(referee.toString());
-		}
 	}
 	
 	public String getRefereeId(Referee referee) {

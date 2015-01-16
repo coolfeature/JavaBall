@@ -35,20 +35,20 @@ public class Container extends JFrame {
 		tabbedPane.addTab(Referees.TAB_NAME, refereesTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-		Search searchTab = new Search(dataSource,refereesTab);
-		tabbedPane.addTab(Search.TAB_NAME, searchTab);
+		Manage searchTab = new Manage(dataSource,refereesTab);
+		tabbedPane.addTab(Manage.TAB_NAME, searchTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_2);
 
 		Chart chartTab = new Chart(dataSource);
 		tabbedPane.addTab(Chart.TAB_NAME, chartTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
 		
-		Allocation allocationTab = new Allocation(dataSource);
-		tabbedPane.addTab(Allocation.TAB_NAME, allocationTab);
+		Matches allocationTab = new Matches(dataSource);
+		tabbedPane.addTab(Matches.TAB_NAME, allocationTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
 		
-		Matches matchesTab = new Matches(dataSource);
-		tabbedPane.addTab(Matches.TAB_NAME, matchesTab);
+		Report matchesTab = new Report(dataSource);
+		tabbedPane.addTab(Report.TAB_NAME, matchesTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_5);
 		
 		JButton btnExit = new JButton("Exit");

@@ -98,14 +98,14 @@ public class Referee implements Comparable<Referee> {
 	public void setTravelAreas(TravelAreas travelAreas) {
 		this.travelAreas = travelAreas;
 	}
+	
+	public String toName() {
+		return this.getFirstName() + " " + this.getLastName();
+	}
 
 	@Override
 	public String toString() {
-		return "Referee [id=" + id + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", qualification=" + qualification
-				+ ", allocations=" + allocations + ", homeArea=" + homeArea
-				+ ", travelArea=" + travelAreas + ", category=" 
-				+ getQualification().getCategory() + "]";
+		return this.getFirstName() + " " + this.getLastName();
 	}
 	
 	public boolean idMatch(Referee other) {

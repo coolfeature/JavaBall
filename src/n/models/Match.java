@@ -1,5 +1,6 @@
 package n.models;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Match {
@@ -7,23 +8,29 @@ public class Match {
 	public static final String JUNIOR = "Junior";
 	public static final String SENIOR = "Senior";
 	public static final String[] CATEGORIES = { JUNIOR, SENIOR };
+	public static final short MIN_MATCHES = 1;
+	public static final short MAX_MATCHES = 52;
 
-	short week;
+	int week;
 	Area area;
 	String category;
 	List<Referee> allocatedReferees;
 
-	public Match(short week, Area area, String category) {
+	public Match() {
+		this(1, new North(), Match.JUNIOR);
+	}
+	
+	public Match(int week, Area area, String category) {
 		this.week = week;
 		this.area = area;
 		this.category = category;
 	}
 
-	public short getWeek() {
+	public int getWeek() {
 		return week;
 	}
 
-	public void setWeek(short week) {
+	public void setWeek(int week) {
 		this.week = week;
 	}
 
@@ -43,6 +50,16 @@ public class Match {
 		this.category = category;
 	}
 
+
+
+	public List<Referee> getAllocatedReferees() {
+		return allocatedReferees;
+	}
+
+	public void setAllocatedReferees(List<Referee> allocatedReferees) {
+		setAllocatedReferees(allocatedReferees.toArray(new Referee[allocatedReferees.size()]));
+	}
+
 	/*
 	 * Returns an array of referees sorted in the order of suitability for the 
 	 * match. 
@@ -53,7 +70,7 @@ public class Match {
 	 * TODO: Consider moving this function elsewhere and perhaps making it 
 	 * static to decrease the size of the object instance.  
 	 */
-	public Referee[] allocateReferees(Referee[] registeredReferees) {
+	public void setAllocatedReferees(Referee[] registeredReferees) {
 		Referee[] referees = new Referee[registeredReferees.length];
 		int current = 0;
 
@@ -79,7 +96,7 @@ public class Match {
 			referees = qualified;
 			current = 0;
 		} else {
-			return null;
+			return;
 		}
 
 		// Sort the qualified referees by match area descending
@@ -177,7 +194,8 @@ public class Match {
 					if (!(this.getArea() instanceof Central)) {
 						/*
 						 * if both current and the next referee live in the same
-						 * area which is not adjacent to the match area
+						 * area which is not adjacent to the match area and is 
+						 * not the match area
 						 */
 						if (referees[current].getHomeArea().toString()
 								.equals(referees[next].getHomeArea().toString())
@@ -197,12 +215,12 @@ public class Match {
 									referees[next] = matchArea;
 								} 	
 							}
-						}	
-					}	
+						}
+					} 
 				}
 			}
 		}
-		return referees;
+		allocatedReferees = Arrays.asList(referees);
 	}
 
 	@Override
