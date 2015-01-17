@@ -33,17 +33,29 @@ import n.models.TravelAreas;
 public class Matches extends JPanel {
 
 	public static final String TAB_NAME = "Matches";
+	public static final String MSG_NOMATCHES = "No Matches";
+	
 	private static final String MATCH_REMOVE = "Remove";
 	private static final String MATCH_ALLOCATE = "Allocate";
+	
+	private static final String MSG_ALLOCATEFAIL = "ALLOCATEFAIL";
+	private static final String MSG_SAVEFAIL = "SAVEFAIL";
+	private static final String MSG_FREESLOT = "FREESLOT";
+	private static final String MSG_SLOTTAKEN = "SLOTTAKEN";
+	private static final String MSG_RMFAIL = "RMFAIL";
 	private static final long serialVersionUID = 1L;
 	
 	DataSource dataSource;
+	Referees refereesTab;
+	Report reportTab;
 	Match match;
 	int lastWeek;
 	JTextArea txtStatus;
 
-	public Matches(DataSource dataSource) {
+	public Matches(DataSource dataSource,Referees refereesTab,Report matchesTab) {
 		this.dataSource = dataSource;
+		this.reportTab = matchesTab;
+		this.refereesTab = refereesTab;
 		txtStatus = new JTextArea("");
 		txtStatus.setFont(new Font("Courier",Font.PLAIN,12));
 		txtStatus.setEditable(false);
@@ -61,24 +73,26 @@ public class Matches extends JPanel {
 		
 		match.setWeek(lastWeek);
 		/*
-		 * The search returns a null or a reference to an array object
+		 * The search returns a null or a reference to an object
 		 */
 		match = dataSource.search(match);
 		/*
 		 * The object returned from search must be cloned to ensure 
-		 * the array object is not mutated.
+		 * the array object is not mutated. 
 		 */
 		match = match == null ? null : new Match(match);
 		if (match == null) {
 			match = new Match();
-			setStatusMsg("FREESLOT");
+			setStatusMsg(Matches.MSG_FREESLOT);
 			forAction = Matches.MATCH_ALLOCATE;
 		} else {
-			setStatusMsg("SLOTTAKEN");
+			setStatusMsg(Matches.MSG_SLOTTAKEN);
 			forAction = Matches.MATCH_REMOVE;
 		}
 		this.add(drawLeftPanel(forAction));
 		this.add(drawRightPanel());
+		// Update report tab
+		reportTab.refresh();
 		this.revalidate();
 	}
 	
@@ -136,7 +150,11 @@ public class Matches extends JPanel {
 		leftPanelGrid.add(panelRadioButtons);
 		leftPanel.add(leftPanelGrid,BorderLayout.NORTH);
 		
-		// ----------------------- ADD BUTTON ---------------------------------
+		/* --------------------- ADD AND REMOVE -------------------------------
+		 * Although the specification document does not require deallocating
+		 * matches and therefore decreasing the number of allocations such 
+		 * functionality has been implemented. 
+		 */
 		JButton btnAddMatch = new JButton(forAction);
 		btnAddMatch.addActionListener(new ActionListener() {
 			@Override
@@ -145,17 +163,31 @@ public class Matches extends JPanel {
 					case Matches.MATCH_ALLOCATE : 
 						match.setArea((Area) cbHomeAreas.getSelectedItem());
 						match.setCategory(rbJunior.isSelected() ? Match.JUNIOR : Match.SENIOR );
-						match.setWeek((Integer)sprWeek.getValue());
+						match.setWeek((Integer)sprWeek.getValue());						
 						match.setAllocatedReferees(dataSource.getReferees());
-						if (dataSource.addMatch(match)) {
-							setStatusMsg(forAction);
+						if (match.getSelectedReferees() != null) {
+							if (dataSource.add(match)) {
+								refresh();
+								dataSource.increaseRefereeAllocation(match.getSelectedReferees());
+								refereesTab.refreshTableData();
+								setStatusMsg(forAction);
+							} else {
+								setStatusMsg(Matches.MSG_SAVEFAIL);
+								refresh();
+							}							
 						} else {
-							setStatusMsg("NOSAVE");
+							setStatusMsg(Matches.MSG_ALLOCATEFAIL);
 						}
-						refresh();
+
 						break;
 					case Matches.MATCH_REMOVE :
-						System.out.println("REMOVE!");
+						if (dataSource.remove(match)) {
+							dataSource.decreaseRefereeAllocation(match.getSelectedReferees());
+							refereesTab.refreshTableData();
+							refresh();
+						} else {
+							setStatusMsg(Matches.MSG_RMFAIL);
+						}
 					default : break;
 				}
 			}
@@ -180,18 +212,19 @@ public class Matches extends JPanel {
 		JPanel rightPanel = new JPanel(new BorderLayout());
 		if (match == null || match.getAllocatedReferees() == null) {
 			JPanel noMatchesPanel = new JPanel(new BorderLayout());
-			JLabel lblNoResults = new JLabel("No Matches");
+			JLabel lblNoResults = new JLabel(Matches.MSG_NOMATCHES);
 			lblNoResults.setHorizontalAlignment(JLabel.CENTER);
 			lblNoResults.setVerticalAlignment(JLabel.CENTER);
 			noMatchesPanel.add(lblNoResults,BorderLayout.CENTER);
 			rightPanel.add(noMatchesPanel);
 			return rightPanel;
 		}
-		DefaultListModel<Referee> lstRefereesModel = new DefaultListModel<Referee>();
+		DefaultListModel<String> lstRefereesModel = new DefaultListModel<String>();
 		for (Referee referee : match.getAllocatedReferees()) {
-			lstRefereesModel.addElement(referee);
+			lstRefereesModel.addElement(referee.printRefereeRecord(Referee.LIST_RECORD_FORMAT));
 		}
-		JList<Referee> lstReferees = new JList<Referee>();
+		JList<String> lstReferees = new JList<String>();
+		lstReferees.setFont(new Font("Courier",Font.PLAIN,12));
 		lstReferees.setModel(lstRefereesModel);
 		lstReferees.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		lstReferees.setSelectedIndices(Referee.SELECTED_REFEREES);
@@ -201,32 +234,41 @@ public class Matches extends JPanel {
 	}
 	
 	private void setStatusMsg(String type) {
-		System.out.println("CALLED " + type);
 		String msg = "";
 		switch (type) {
 			case Matches.MATCH_ALLOCATE : 
 				msg = "A new match with allocated referees has been saved!\n\n"
-						+ String.format(Match.DISPLAY_FORMAT, 
-						"WEEK","GROUP","AREA","REF 1","REF 2");
+						+ String.format(Match.LIST_DISPLAY_FORMAT, 
+								Match.FIELD_WEEK,Match.FIELD_GROUP,
+								Match.FIELD_AREA,"REF 1","REF 2");
 				msg = msg + "\n" + match + "\n\n" + "Referee details:" 
-						+ "\n" + match.printReferee(0) + "\n\n" 
-						+ match.printReferee(1);
+						+ "\n" + match.printRefereeDetails(0) + "\n\n" 
+						+ match.printRefereeDetails(1);
 				break;
-			case "NOSAVE" :
+			case Matches.MSG_SAVEFAIL :
 				msg = "There was a error.\n"
 						+ "Check if the match does not exist already.";
 				break;
-			case "FREESLOT" : 
+			case Matches.MSG_FREESLOT : 
 				msg = "There is not a match scheduled for this week";
 				break;
-			case "SLOTTAKEN" : 
-				msg = "There is a match scheduled:\n"
-						+ String.format(Match.DISPLAY_FORMAT, 
-						"WEEK","GROUP","AREA","REF 1","REF 2");
-				msg = msg + "\n" + match + "\n\n" + "Referee details:" 
-						+ "\n" + match.printReferee(0) + "\n\n" 
-						+ match.printReferee(1);
+			case Matches.MSG_SLOTTAKEN : 
+				msg = "Scheduled match:\n"
+						+ String.format(Match.LIST_DISPLAY_FORMAT, 
+								Match.FIELD_WEEK,Match.FIELD_GROUP,
+								Match.FIELD_AREA,"REF 1","REF 2");
+				msg = msg + "\n" + match + "\n\n" 
+						+ "Referee details at the time of allocation:" 
+						+ "\n" + match.printRefereeDetails(0) + "\n\n" 
+						+ match.printRefereeDetails(1);
 				break;
+			case Matches.MSG_RMFAIL :
+				msg = "There was a error.\nThe match could not be removed";
+				break;
+			case Matches.MSG_ALLOCATEFAIL :
+				msg = "There are not any suitable referees available.\n"
+						+ "The match could not be allocated.";
+				break;				
 			default : break;
 		}
 		txtStatus.setText(msg);

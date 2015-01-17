@@ -3,8 +3,18 @@ package n.models;
 public class Referee implements Comparable<Referee> {
 	
 	public static final int[] SELECTED_REFEREES = {0,1};
-	public static final String[] FIELD_NAMES = {"ID","FIRST NAME","LAST NAME"
-		,"QUALIFICATION","ALLOCATIONS","HOME AREA","TRAVEL AREA"};
+	public static final String LIST_RECORD_FORMAT = "%3s %12s %12s %5s %3s %8s %3s" ;
+	public static final String FILE_RECORD_FORMAT = "%5s %15s %15s %15s %15s %15s %15s" ;
+	public static final String FIELD_ID = "ID";
+	public static final String FIELD_FIRST_NAME = "FIRST NAME";
+	public static final String FIELD_LAST_NAME = "LAST NAME";
+	public static final String FIELD_QUALIFICATION = "QUALIFICATION";
+	public static final String FIELD_ALLOCATIONS = "ALLOCATIONS";
+	public static final String FIELD_HOME_AREA = "HOME AREA";
+	public static final String FIELD_TRAVEL_AREA = "TRAVEL AREA";
+	public static final String[] FIELD_NAMES = {FIELD_ID,FIELD_FIRST_NAME
+		,FIELD_LAST_NAME,FIELD_QUALIFICATION,FIELD_ALLOCATIONS,FIELD_HOME_AREA
+		,FIELD_TRAVEL_AREA};
 	
 	String id;
 	String firstName;
@@ -14,7 +24,6 @@ public class Referee implements Comparable<Referee> {
 	Area homeArea;
 	TravelAreas travelAreas;
 	
-
 	public Referee(String firstName,String lastName) {
 		this.id = "";
 		this.firstName = firstName;
@@ -37,6 +46,16 @@ public class Referee implements Comparable<Referee> {
 		this.travelAreas = travelAreas;
 	}
 
+	public Referee(Referee clone) {
+		this.id = clone.getId();
+		this.firstName = clone.getFirstName();
+		this.lastName = clone.getLastName();
+		this.qualification = clone.getQualification();
+		this.allocations = clone.getAllocations();
+		this.homeArea = clone.getHomeArea();
+		this.travelAreas = clone.getTravelAreas();
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -80,7 +99,15 @@ public class Referee implements Comparable<Referee> {
 	public Area getHomeArea() {
 		return homeArea;
 	}
-
+	
+	public void increaseAllocations() {
+		this.allocations++;
+	}
+	
+	public void decreaseAllocations() {
+		this.allocations--;
+	}
+	
 	public void setHomeArea(Area homeArea) {
 		this.homeArea = homeArea;
 		if (homeArea instanceof North) {
@@ -100,24 +127,69 @@ public class Referee implements Comparable<Referee> {
 		this.travelAreas = travelAreas;
 	}
 
-	public String printReferee() {
+	public String printRefereeRecord() {
 		return "Id: " + this.getId() 
-				+ "\nName: " + this.toString()
+				+ "\nName: " + this.getFirstName() + " " + this.getLastName()
 				+ "\nArea: " + this.getHomeArea()
 				+ "\nQualification: " + this.getQualification().toString()
 				+ "\nAllocations: " + this.getAllocations()
 				+ "\nTravels: " + this.getTravelAreas().toString();
 	}
 	
+	public String printRefereeRecord(String format) {
+		return String.format(format, this.getId()
+				,this.getFirstName(),this.getLastName()
+				,this.getQualification().toString()
+				,Integer.toString(this.getAllocations())
+				,this.getHomeArea().toString()
+				,this.getTravelAreas().toString());
+	}
+		
 	@Override
 	public String toString() {
 		return this.getFirstName() + " " + this.getLastName();
 	}
-	
+
 	public boolean idMatch(Referee other) {
 		return this.getId().equals(other.getId()) ? true : false;
 	}
 
+	/*
+	 * Sorting should be done on first two characters of the ID
+	 * and then the number
+	 */
+	@Override
+	public int compareTo(Referee other) {
+		String thisInitials = this.getId().substring(0,2);
+		String otherInitials = other.getId().substring(0,2);
+		int thisIdNum = Integer.parseInt(this.getId().substring(2,3));
+		int otherIdNum = Integer.parseInt(other.getId().substring(2,3));
+		int areEqual = thisInitials.compareTo(otherInitials);
+		if (areEqual == 0) {
+			return thisIdNum == otherIdNum ? 0 : thisIdNum < otherIdNum ? -1 : 1; 
+		} else {
+			return areEqual;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + allocations;
+		result = prime * result
+				+ ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result
+				+ ((homeArea == null) ? 0 : homeArea.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result
+				+ ((qualification == null) ? 0 : qualification.hashCode());
+		result = prime * result
+				+ ((travelAreas == null) ? 0 : travelAreas.hashCode());
+		return result;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -162,22 +234,5 @@ public class Referee implements Comparable<Referee> {
 			return false;
 		return true;
 	}
-
-	/*
-	 * Sorting should be done on first two characters of the ID
-	 * and then the number
-	 */
-	@Override
-	public int compareTo(Referee other) {
-		String thisInitials = this.getId().substring(0,2);
-		String otherInitials = other.getId().substring(0,2);
-		int thisIdNum = Integer.parseInt(this.getId().substring(2,3));
-		int otherIdNum = Integer.parseInt(other.getId().substring(2,3));
-		int areEqual = thisInitials.compareTo(otherInitials);
-		if (areEqual == 0) {
-			return thisIdNum == otherIdNum ? 0 : thisIdNum < otherIdNum ? -1 : 1; 
-		} else {
-			return areEqual;
-		}
-	}
+	
 }

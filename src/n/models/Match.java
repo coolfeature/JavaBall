@@ -5,13 +5,20 @@ import java.util.List;
 
 public class Match {
 
-	public static final String DISPLAY_FORMAT = "%4s %6s %7s %15s %15s";
+	public static final String FIELD_WEEK = "WEEK";
+	public static final String FIELD_AREA = "AREA";
+	public static final String FIELD_GROUP= "GROUP";
+	public static final String FIELD_REFEREE1 = "REFEREE 1";
+	public static final String FIELD_REFEREE2 = "REFEREE 2";
+	public static final String REPORT_DISPLAY_FORMAT = "%6s %8s %9s %20s %20s";
+	public static final String LIST_DISPLAY_FORMAT = "%4s %6s %7s %15s %15s";
 	public static final String NO_REFEREE_MSG = "N/A";
 	public static final String JUNIOR = "Junior";
 	public static final String SENIOR = "Senior";
 	public static final String[] CATEGORIES = { JUNIOR, SENIOR };
 	public static final short MIN_MATCHES = 1;
 	public static final short MAX_MATCHES = 52;
+	public static final int PER_MATCH = Referee.SELECTED_REFEREES.length;
 
 	int week;
 	Area area;
@@ -59,18 +66,52 @@ public class Match {
 		this.category = category;
 	}
 	
-	public String printReferee(int index) {
+	public String printRefereeDetails(int refereeArrayIndex) {
 		Referee[] referees = getAllocatedReferees();
 		if (referees != null) {
-			if (referees.length > index) {
-				Referee referee = referees[index];
-				return referee.printReferee();
-			} else {
-				return NO_REFEREE_MSG;
-			}
-		} else {
-			return NO_REFEREE_MSG;
-		}		
+			if (referees.length > refereeArrayIndex) {
+				Referee referee = referees[refereeArrayIndex];
+				return referee.printRefereeRecord();				
+			} 
+		}
+		return NO_REFEREE_MSG;
+	}
+	
+	public void printReferees(Referee[] referees) {
+		for (Referee r : referees) {
+			System.out.println(r.toString());
+		}
+	}
+
+	public String toReportString() {
+		String week = Integer.toString(getWeek());
+		String category = getCategory();
+		String area = getArea().toString();
+		String[] refs = {"UNKNOWN","UNKNOWN"};
+		Referee[] referees = getSelectedReferees();
+		if (referees != null) {
+			for (int i=0;i<referees.length;i++) {
+				refs[i] = referees[i].toString(); 
+			}			
+		}
+		return String.format(Match.REPORT_DISPLAY_FORMAT, 
+			week,category,area,refs[0],refs[1]);
+	}
+	
+	@Override
+	public String toString() {
+		String week = Integer.toString(getWeek());
+		String category = getCategory();
+		String area = getArea().toString();
+		String[] refs = {"UNKNOWN","UNKNOWN"};
+		Referee[] referees = getSelectedReferees();
+		if (referees != null) {
+			for (int i=0;i<referees.length;i++) {
+				refs[i] = referees[i].toString(); 
+			}			
+		}
+		return String.format(Match.LIST_DISPLAY_FORMAT, 
+			week,category,area,refs[0],refs[1]);
 	}
 
 	public List<Referee> getAllocatedRefereesList() {
@@ -85,13 +126,33 @@ public class Match {
 		}
 	}
 	
+	/*
+	 * The selected referees are the most suitable allocated referees.
+	 * The number of selected referees is set in PER_MATCH final 
+	 * variable.
+	 */
+	public Referee[] getSelectedReferees() {
+		Referee[] allocated = getAllocatedReferees() ;
+		if (allocated != null) {
+			if (allocated.length >= Match.PER_MATCH) {
+				Referee[] selected = new Referee[Match.PER_MATCH];	
+				for (int i=0;i<Match.PER_MATCH;i++) {
+					selected[i] = allocated[i]; 
+				}	
+				return selected;
+			}
+		} 
+		return null;
+	}
+	
 	public void setAllocatedReferees(List<Referee> allocatedReferees) {
 		setAllocatedReferees(allocatedReferees.toArray(new Referee[allocatedReferees.size()]));
 	}
 
 	/*
 	 * Returns an array of referees sorted in the order of suitability for the 
-	 * match. 
+	 * match. The new array contains deeply copied elements from the source
+	 * array.
 	 * 
 	 * NOTE: The goal was to implement the method using array algorithms only
 	 * avoiding the use of Lists or Comparators. 
@@ -164,7 +225,7 @@ public class Match {
 				}
 			}
 		}
-		
+	
 		/* --------------------------------------------------------------------
 		 * After that, referees are considered who live in adjacent areas and 
 		 * are prepared to travel to the stadium area and have the least number 
@@ -249,23 +310,30 @@ public class Match {
 				}
 			}
 		}
-		allocatedReferees = Arrays.asList(referees);
+		allocatedReferees = Arrays.asList(cloneReferees(referees));
+	}
+	
+	public Referee[] cloneReferees(Referee[] allocated) {
+		Referee[] suitableReferees = new Referee[allocated.length];
+		for (int i=0;i<allocated.length;i++) {
+			suitableReferees[i] = new Referee(allocated[i]);
+		}
+		return suitableReferees;
 	}
 
 	@Override
-	public String toString() {
-		String week = Integer.toString(getWeek());
-		String category = getCategory();
-		String area = getArea().toString();
-		String[] refs = {"UNKNOWN","UNKNOWN"};
-		Referee[] referees = getAllocatedReferees();
-		if (referees != null) {
-			for (int i=0;i<2;i++) {
-				refs[i] = referees[i].toString(); 
-			}			
-		}
-		return String.format(DISPLAY_FORMAT, 
-			week,category,area,refs[0],refs[1]);
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((allocatedReferees == null) ? 0 : allocatedReferees
+						.hashCode());
+		result = prime * result + ((area == null) ? 0 : area.hashCode());
+		result = prime * result
+				+ ((category == null) ? 0 : category.hashCode());
+		result = prime * result + week;
+		return result;
 	}
 
 	@Override
@@ -277,6 +345,11 @@ public class Match {
 		if (getClass() != obj.getClass())
 			return false;
 		Match other = (Match) obj;
+		if (allocatedReferees == null) {
+			if (other.allocatedReferees != null)
+				return false;
+		} else if (!allocatedReferees.equals(other.allocatedReferees))
+			return false;
 		if (area == null) {
 			if (other.area != null)
 				return false;

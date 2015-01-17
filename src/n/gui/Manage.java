@@ -50,6 +50,14 @@ public class Manage extends JPanel implements ActionListener {
 	DataSource dataSource;
 	Referees refereesTab;
 	
+	/*
+	 * The searching and updating of the referees has a minor flaw. It is
+	 * possible to have two referees with the same first name and surname
+	 * added but only one will ever be edited. This problem can be solved 
+	 * with the adding of search by id functionality not mentioned in the
+	 * specification document.
+	 */
+	
 	public Manage(DataSource fileStore,Referees refereesTab) {
 		this.dataSource = fileStore;
 		this.refereesTab = refereesTab;
@@ -319,7 +327,7 @@ public class Manage extends JPanel implements ActionListener {
 						cbSouth.setEnabled(true);
 						break;
 					case Manage.REFEREE_SAVE :
-						if (dataSource.updateReferee(referee)) {
+						if (dataSource.update(referee)) {
 							refereesTab.refreshTableData();
 							JOptionPane.showMessageDialog(null, "Referee details have been updated.",
 									"New Data", JOptionPane.INFORMATION_MESSAGE);
@@ -334,7 +342,7 @@ public class Manage extends JPanel implements ActionListener {
 							referee.setLastName(txtEditLastName.getText().trim());
 							if (validateAllocations(txtEditAllocations.getText().trim())) {
 									referee.setId(dataSource.getRefereeId(referee));
-									if (dataSource.addReferee(referee)) {
+									if (dataSource.add(referee)) {
 										JOptionPane.showMessageDialog(null, 
 											"New Referee has been added.",
 											"New Referee", JOptionPane.INFORMATION_MESSAGE);
@@ -362,7 +370,7 @@ public class Manage extends JPanel implements ActionListener {
 		btnFormDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (dataSource.removeReferee(referee)) {
+				if (dataSource.remove(referee)) {
 					runSearch(referee.getFirstName(),referee.getLastName());
 					refereesTab.refreshTableData();
 					JOptionPane.showMessageDialog(null, "Referee has been removed",
@@ -441,6 +449,7 @@ public class Manage extends JPanel implements ActionListener {
 		if (referee != null) {
 			showAddOrEditForm(Manage.REFEREE_EDIT);
 		} else {
+			editPanel.removeAll();
 			JPanel noResultPanel = new JPanel(new BorderLayout());
 			JLabel lblNoResults = new JLabel("No Results");
 			lblNoResults.setHorizontalAlignment(JLabel.CENTER);
@@ -449,7 +458,6 @@ public class Manage extends JPanel implements ActionListener {
 			editPanel.add(noResultPanel);
 			this.revalidate();
 		}
-		
 	}
 		
 	@Override

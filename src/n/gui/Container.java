@@ -43,18 +43,21 @@ public class Container extends JFrame {
 		tabbedPane.addTab(Chart.TAB_NAME, chartTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_3);
 		
-		Matches allocationTab = new Matches(dataSource);
+		Report reportTab = new Report(dataSource);
+		
+		Matches allocationTab = new Matches(dataSource,refereesTab,reportTab);
 		tabbedPane.addTab(Matches.TAB_NAME, allocationTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_4);
 		
-		Report matchesTab = new Report(dataSource);
-		tabbedPane.addTab(Report.TAB_NAME, matchesTab);
+		tabbedPane.addTab(Report.TAB_NAME, reportTab);
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_5);
 		
 		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				dataSource.writeReferees();
+				dataSource.writeReport();
 				System.exit(0);
 			}
 		});

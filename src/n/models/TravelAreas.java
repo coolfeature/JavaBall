@@ -58,5 +58,42 @@ public class TravelAreas {
 	public String toString() {
 		return north.getTravelFlag() + central.getTravelFlag() + south.getTravelFlag();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((central == null) ? 0 : central.hashCode());
+		result = prime * result + ((north == null) ? 0 : north.hashCode());
+		result = prime * result + ((south == null) ? 0 : south.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TravelAreas other = (TravelAreas) obj;
+		if (central == null) {
+			if (other.central != null)
+				return false;
+		} else if (!central.equals(other.central))
+			return false;
+		if (north == null) {
+			if (other.north != null)
+				return false;
+		} else if (!north.equals(other.north))
+			return false;
+		if (south == null) {
+			if (other.south != null)
+				return false;
+		} else if (!south.equals(other.south))
+			return false;
+		return true;
+	}
 	
 }

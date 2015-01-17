@@ -20,7 +20,30 @@ public class Central implements Area {
 		this.travel = travel;
 		
 	}
+
+	@Override
+	public String getTravelFlag() {
+		return getTravel() ? "Y" : "N";
+	}
 	
+	@Override
+	public boolean isAdjacent(Area other) {
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		String[] tokens = java.lang.invoke.MethodHandles.lookup()
+				.lookupClass().getName().split("\\.");
+		return tokens[tokens.length-1];
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (travel ? 1231 : 1237);
+		return result;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -32,21 +55,6 @@ public class Central implements Area {
 		Central other = (Central) obj;
 		if (travel != other.travel)
 			return false;
-		return true;
-	}
-	
-	@Override
-	public String toString() {
-		String[] tokens = java.lang.invoke.MethodHandles.lookup()
-				.lookupClass().getName().split("\\.");
-		return tokens[tokens.length-1];
-	}
-	@Override
-	public String getTravelFlag() {
-		return getTravel() ? "Y" : "N";
-	}
-	@Override
-	public boolean isAdjacent(Area other) {
 		return true;
 	}
 	

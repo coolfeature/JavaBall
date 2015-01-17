@@ -1,6 +1,7 @@
 package n.db;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,9 @@ import n.models.South;
 
 public class DataSource {
 	
-	public static final String INPUT_FILE_NAME = "RefereesIn.txt";
+	public static final String INPUT_REFEREE_FILE = "RefereesIn.txt";
+	public static final String OUTPUT_REFEREE_FILE = "RefereesOut.txt";
+	public static final String OUTPUT_MATCH_FILE = "MatchAllocs.txt";
 	public static final short MAX_REFEREES = 12;
 	private Referee[] referees = null;
 	private Match[] matches = null;
@@ -35,6 +38,54 @@ public class DataSource {
 		this.matches = matches;
 	}
 
+	public boolean add(Match match) {
+		if (search(match) == null) {
+			List<Match> matchList = null;
+			if (matches==null) {	
+				matches = new Match[]{match};
+			} else {
+				matchList = new ArrayList<Match>(Arrays.asList(matches));	
+				matchList.add(match);
+				matches = matchList.toArray(new Match[matchList.size()]);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean remove(Match match) {
+		List<Match> matchesList = new ArrayList<Match>(Arrays.asList(matches));
+		boolean found = false;
+		int position = 0;
+		for(int i=0;i<matches.length;i++) {
+			if (matches[i].getWeek() == match.getWeek()) {
+				found = true;
+				position = i;
+				break;
+			}
+		}
+		if (found) {
+			matchesList.remove(position);
+			matches = matchesList.toArray(new Match[matchesList.size()]);
+		} 
+		return found;
+	}
+	
+	public Match search(Match match) {
+		Match exists = null;
+		if (matches==null) {
+			return exists; 
+		}
+		for (Match m : matches) {
+			if (m.getWeek() == match.getWeek()) {
+				return m;
+			}
+		}
+		return exists;
+	}
+	
+	
 	public Referee[] getReferees() {
 		return referees;
 	}
@@ -43,7 +94,7 @@ public class DataSource {
 		this.referees = referees;
 	}
 	
-	public boolean removeReferee(Referee referee) {
+	public boolean remove(Referee referee) {
 		List<Referee> refereeList = new ArrayList<Referee>(Arrays.asList(referees));
 		boolean found = false;
 		int position = 0;
@@ -61,16 +112,16 @@ public class DataSource {
 		return found;
 	}
 
-	public boolean updateReferee(Referee referee) {
+	public boolean update(Referee referee) {
 		if (search(referee) != null) {
-			removeReferee(referee);
-			return addReferee(referee);
+			remove(referee);
+			return add(referee);
 		} else {
 			return false;
 		}
 	}
 	
-	public boolean addReferee(Referee referee) {
+	public boolean add(Referee referee) {
 		if (referees.length < DataSource.MAX_REFEREES) {
 			if (search(referee) == null) {
 				List<Referee> refereeList = new ArrayList<Referee>(Arrays.asList(referees));
@@ -81,23 +132,6 @@ public class DataSource {
 			} else {
 				return false;
 			}	
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean addMatch(Match match) {
-		if (search(match) == null) {
-			List<Match> matchList = null;
-			System.out.println("Adding " + match.toString());
-			if (matches==null) {	
-				matches = new Match[]{match};
-			} else {
-				matchList = new ArrayList<Match>(Arrays.asList(matches));	
-				matchList.add(match);
-				matches = matchList.toArray(new Match[matchList.size()]);
-			}
-			return true;
 		} else {
 			return false;
 		}
@@ -115,19 +149,6 @@ public class DataSource {
 		return referee;
 	}
 
-	public Match search(Match match) {
-		Match exists = null;
-		if (matches==null) {
-			return exists; 
-		}
-		for (Match m : getMatches()) {
-			if (m.getWeek() == match.getWeek()) {
-				return m;
-			}
-		}
-		return exists;
-	}
-	
 	public Referee search(Referee referee) {
 		Referee exists = null;
 		for (Referee ref : referees) {
@@ -158,8 +179,50 @@ public class DataSource {
 		}
 	}
 	
+	public String getRefereeId(Referee referee) {
+		return getRefereeId(referee.getFirstName(),referee.getLastName());
+	}
+	
+	public String getRefereeId(String firstName,String lastName) {
+		String initials = firstName.substring(0,1) + lastName.substring(0,1);
+		int id = 1;
+		for (Referee referee : referees) {
+			if (referee.getId().substring(0,2).equals(initials)) {
+				int refereeId = Integer.parseInt(referee.getId().substring(2,3));
+				if (refereeId >= id) {
+					id = refereeId + 1;
+				}
+			}
+		}
+		return initials + id;
+	}
+	
+	public void increaseRefereeAllocation (Referee[] selected) {
+		if (selected != null) {
+			for (int r=0;r<selected.length;r++) {
+				for (int i=0;i<referees.length;i++) {
+					if (referees[i].idMatch(selected[r])) {
+						referees[i].increaseAllocations();
+					}
+				} 
+			}			
+		} 	
+	}
+	
+	public void decreaseRefereeAllocation (Referee[] selected) {
+		if (selected != null) {
+			for (int r=0;r<selected.length;r++) {
+				for (int i=0;i<referees.length;i++) {
+					if (referees[i].idMatch(selected[r])) {
+						referees[i].decreaseAllocations();
+					}
+				} 
+			}			
+		} 	
+	}	
+	
 	private Referee[] readIn() {
-		List<Referee> refereeList = readIn(DataSource.INPUT_FILE_NAME);
+		List<Referee> refereeList = readIn(DataSource.INPUT_REFEREE_FILE);
 		if (refereeList != null) {
 			Referee[] referees = refereeList.toArray(new Referee[refereeList.size()]);
 			Arrays.sort(referees);
@@ -219,22 +282,73 @@ public class DataSource {
 		}
 		return referees;
 	}
-	
-	public String getRefereeId(Referee referee) {
-		return getRefereeId(referee.getFirstName(),referee.getLastName());
+
+	/*
+	 * Saves the Report
+	 */
+	public void writeReferees() {
+		if (referees == null) {
+			return;
+		}
+		Arrays.sort(referees);
+		try {
+			FileWriter fw = null;
+			try {
+				fw = new FileWriter(DataSource.OUTPUT_REFEREE_FILE);
+				String header = String.format(Referee.FILE_RECORD_FORMAT, 
+						Referee.FIELD_ID,Referee.FIELD_FIRST_NAME
+						,Referee.FIELD_LAST_NAME,Referee.FIELD_QUALIFICATION
+						,Referee.FIELD_ALLOCATIONS,Referee.FIELD_HOME_AREA
+						,Referee.FIELD_TRAVEL_AREA);
+				fw.write(header + System.lineSeparator());
+				for (Referee referee : referees) {
+					fw.write(referee
+							.printRefereeRecord(Referee.FILE_RECORD_FORMAT) 
+							+ System.lineSeparator());
+				}
+			} finally {
+				if (fw != null)
+					fw.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public String getRefereeId(String firstName,String lastName) {
-		String initials = firstName.substring(0,1) + lastName.substring(0,1);
-		int id = 1;
-		for (Referee referee : referees) {
-			if (referee.getId().substring(0,2).equals(initials)) {
-				int refereeId = Integer.parseInt(referee.getId().substring(2,3));
-				if (refereeId >= id) {
-					id = refereeId + 1;
-				}
-			}
+	/*
+	 * Writes the Report
+	 */
+	public void writeReport() {
+		if (matches == null) {
+			return;
 		}
-		return initials + id;
+		try {
+			FileWriter fw = null;
+			try {
+				fw = new FileWriter(DataSource.OUTPUT_MATCH_FILE);
+				String header = String.format(Match.REPORT_DISPLAY_FORMAT, 
+						Match.FIELD_WEEK,Match.FIELD_GROUP,Match.FIELD_AREA,
+						Match.FIELD_REFEREE1,Match.FIELD_REFEREE2);
+				fw.write(header + System.lineSeparator());
+				for (Match match : matches) {
+					fw.write(match.toReportString() + System.lineSeparator());
+				}
+			} finally {
+				if (fw != null)
+					fw.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void printReferees() {
+		if (referees != null) {
+			for (Referee r : referees) {
+				System.out.println(r.toString());
+			}	
+		} else {
+			System.out.println("No Referees");
+		}
 	}
 }

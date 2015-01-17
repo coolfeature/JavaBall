@@ -1,4 +1,4 @@
-DG1 Dave Gray NJB2 3 Central NYY
+DG1 Dave Gray NJB1 3 Central YYY
 DM1 Denis Montague IJB1 3 North YYY
 SC1 Szymon Czaja IJB4 3 North YNN
 JL1 Jack Low IJB2 2 South NYY
