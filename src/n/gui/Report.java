@@ -53,6 +53,14 @@ public class Report extends JPanel {
 					System.out.println(r.toString());
 				}
 				System.out.println("");
+				
+				Match[] ms = fileStore.getMatches();
+				if (ms != null) {
+					for(Match mt : ms) {
+						System.out.println(mt.toString());
+					}	
+				}
+				
 			}
 			
 		});

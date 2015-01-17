@@ -89,6 +89,7 @@ public class DataSource {
 	public boolean addMatch(Match match) {
 		if (search(match) == null) {
 			List<Match> matchList = null;
+			System.out.println("Adding " + match.toString());
 			if (matches==null) {	
 				matches = new Match[]{match};
 			} else {
@@ -116,8 +117,10 @@ public class DataSource {
 
 	public Match search(Match match) {
 		Match exists = null;
-		if (matches==null) return exists; 
-		for (Match m : matches) {
+		if (matches==null) {
+			return exists; 
+		}
+		for (Match m : getMatches()) {
 			if (m.getWeek() == match.getWeek()) {
 				return m;
 			}

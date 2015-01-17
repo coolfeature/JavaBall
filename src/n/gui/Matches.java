@@ -1,6 +1,7 @@
 package n.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,11 +13,11 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -39,17 +40,43 @@ public class Matches extends JPanel {
 	DataSource dataSource;
 	Match match;
 	int lastWeek;
+	JTextArea txtStatus;
 
 	public Matches(DataSource dataSource) {
 		this.dataSource = dataSource;
-		this.match = new Match();
-		this.lastWeek = Match.MIN_MATCHES;
-		refresh(Matches.MATCH_ALLOCATE);
+		txtStatus = new JTextArea("");
+		txtStatus.setFont(new Font("Courier",Font.PLAIN,12));
+		txtStatus.setEditable(false);
+		txtStatus.setLineWrap(true);
+		lastWeek = Match.MIN_MATCHES;
+		match = new Match();
+		refresh();
 	}
 	
-	private void refresh(String forAction) {
+	private void refresh() {
 		this.removeAll();
 		this.setLayout(new GridLayout(1, 2));
+		
+		String forAction;
+		
+		match.setWeek(lastWeek);
+		/*
+		 * The search returns a null or a reference to an array object
+		 */
+		match = dataSource.search(match);
+		/*
+		 * The object returned from search must be cloned to ensure 
+		 * the array object is not mutated.
+		 */
+		match = match == null ? null : new Match(match);
+		if (match == null) {
+			match = new Match();
+			setStatusMsg("FREESLOT");
+			forAction = Matches.MATCH_ALLOCATE;
+		} else {
+			setStatusMsg("SLOTTAKEN");
+			forAction = Matches.MATCH_REMOVE;
+		}
 		this.add(drawLeftPanel(forAction));
 		this.add(drawRightPanel());
 		this.revalidate();
@@ -85,7 +112,6 @@ public class Matches extends JPanel {
 		cbHomeAreas.setEnabled(true);
 		cbHomeAreas.setSelectedItem(match.getArea());
 		cbHomeAreas.setEnabled(forAction.equals(Matches.MATCH_ALLOCATE));
-		System.out.println("cbHomeAreas" + forAction.equals(Matches.MATCH_ALLOCATE));
 		cbHomeAreas.setMaximumSize(cbHomeAreas.getPreferredSize());
 		leftPanelGrid.add(cbHomeAreas);
 
@@ -94,12 +120,12 @@ public class Matches extends JPanel {
 		leftPanelGrid.add(new JLabel("Group"));
 		JPanel panelRadioButtons = new JPanel();
 		JRadioButton rbJunior = new JRadioButton();
-		rbJunior.setText("Junior");
+		rbJunior.setText(Match.JUNIOR);
 		rbJunior.setSelected(match.getCategory().equals(Match.JUNIOR) ? true : false);
 		rbJunior.setEnabled(forAction.equals(Matches.MATCH_ALLOCATE));
 		panelRadioButtons.add(rbJunior);
 		JRadioButton rbSenior = new JRadioButton();
-		rbSenior.setText("Senior");
+		rbSenior.setText(Match.SENIOR);
 		rbSenior.setSelected(match.getCategory().equals(Match.SENIOR) ? true : false);
 		rbSenior.setEnabled(forAction.equals(Matches.MATCH_ALLOCATE));
 		panelRadioButtons.add(rbSenior);
@@ -109,23 +135,6 @@ public class Matches extends JPanel {
 		
 		leftPanelGrid.add(panelRadioButtons);
 		leftPanel.add(leftPanelGrid,BorderLayout.NORTH);
-		
-		// ------------------- SPINNER LISTENER -------------------------------
-		sprWeek.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				lastWeek = (Integer)sprWeek.getValue();
-				match.setWeek(lastWeek);
-				Match existing = dataSource.search(match); 
-				if (existing == null) {
-					refresh(Matches.MATCH_ALLOCATE);
-				} else {
-					System.out.println("found" + existing.toString());
-					match = existing;
-					refresh(Matches.MATCH_REMOVE);
-				}
-			}
-		});
 		
 		// ----------------------- ADD BUTTON ---------------------------------
 		JButton btnAddMatch = new JButton(forAction);
@@ -139,16 +148,11 @@ public class Matches extends JPanel {
 						match.setWeek((Integer)sprWeek.getValue());
 						match.setAllocatedReferees(dataSource.getReferees());
 						if (dataSource.addMatch(match)) {
-							JOptionPane.showMessageDialog(null, 
-								"New Match with allocated referees has been saved.",
-								"New Match", JOptionPane.INFORMATION_MESSAGE);
+							setStatusMsg(forAction);
 						} else {
-							JOptionPane.showMessageDialog(null, 
-									"There was a error. "
-									+ "Check if the match does not exist already.",
-									"New Match", JOptionPane.WARNING_MESSAGE);
+							setStatusMsg("NOSAVE");
 						}
-						refresh(Matches.MATCH_REMOVE);
+						refresh();
 						break;
 					case Matches.MATCH_REMOVE :
 						System.out.println("REMOVE!");
@@ -156,9 +160,19 @@ public class Matches extends JPanel {
 				}
 			}
 		});
+
 		
+		// ------------------- SPINNER LISTENER -------------------------------
+		sprWeek.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				lastWeek = (int)sprWeek.getValue();
+				refresh();
+			}
+		});
+
+		leftPanel.add(txtStatus);
 		leftPanel.add(btnAddMatch,BorderLayout.SOUTH);
-		
 		return leftPanel;
 	}
 	
@@ -180,9 +194,41 @@ public class Matches extends JPanel {
 		JList<Referee> lstReferees = new JList<Referee>();
 		lstReferees.setModel(lstRefereesModel);
 		lstReferees.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		
+		lstReferees.setSelectedIndices(Referee.SELECTED_REFEREES);
 		JScrollPane spReferees = new JScrollPane(lstReferees);
 		rightPanel.add(spReferees,BorderLayout.CENTER);
 		return rightPanel;
+	}
+	
+	private void setStatusMsg(String type) {
+		System.out.println("CALLED " + type);
+		String msg = "";
+		switch (type) {
+			case Matches.MATCH_ALLOCATE : 
+				msg = "A new match with allocated referees has been saved!\n\n"
+						+ String.format(Match.DISPLAY_FORMAT, 
+						"WEEK","GROUP","AREA","REF 1","REF 2");
+				msg = msg + "\n" + match + "\n\n" + "Referee details:" 
+						+ "\n" + match.printReferee(0) + "\n\n" 
+						+ match.printReferee(1);
+				break;
+			case "NOSAVE" :
+				msg = "There was a error.\n"
+						+ "Check if the match does not exist already.";
+				break;
+			case "FREESLOT" : 
+				msg = "There is not a match scheduled for this week";
+				break;
+			case "SLOTTAKEN" : 
+				msg = "There is a match scheduled:\n"
+						+ String.format(Match.DISPLAY_FORMAT, 
+						"WEEK","GROUP","AREA","REF 1","REF 2");
+				msg = msg + "\n" + match + "\n\n" + "Referee details:" 
+						+ "\n" + match.printReferee(0) + "\n\n" 
+						+ match.printReferee(1);
+				break;
+			default : break;
+		}
+		txtStatus.setText(msg);
 	}
 }

@@ -2,6 +2,7 @@ package n.models;
 
 public class Referee implements Comparable<Referee> {
 	
+	public static final int[] SELECTED_REFEREES = {0,1};
 	public static final String[] FIELD_NAMES = {"ID","FIRST NAME","LAST NAME"
 		,"QUALIFICATION","ALLOCATIONS","HOME AREA","TRAVEL AREA"};
 	
@@ -98,11 +99,16 @@ public class Referee implements Comparable<Referee> {
 	public void setTravelAreas(TravelAreas travelAreas) {
 		this.travelAreas = travelAreas;
 	}
-	
-	public String toName() {
-		return this.getFirstName() + " " + this.getLastName();
-	}
 
+	public String printReferee() {
+		return "Id: " + this.getId() 
+				+ "\nName: " + this.toString()
+				+ "\nArea: " + this.getHomeArea()
+				+ "\nQualification: " + this.getQualification().toString()
+				+ "\nAllocations: " + this.getAllocations()
+				+ "\nTravels: " + this.getTravelAreas().toString();
+	}
+	
 	@Override
 	public String toString() {
 		return this.getFirstName() + " " + this.getLastName();

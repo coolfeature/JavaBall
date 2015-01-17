@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Match {
 
+	public static final String DISPLAY_FORMAT = "%4s %6s %7s %15s %15s";
+	public static final String NO_REFEREE_MSG = "N/A";
 	public static final String JUNIOR = "Junior";
 	public static final String SENIOR = "Senior";
 	public static final String[] CATEGORIES = { JUNIOR, SENIOR };
@@ -17,7 +19,14 @@ public class Match {
 	List<Referee> allocatedReferees;
 
 	public Match() {
-		this(1, new North(), Match.JUNIOR);
+		this(Match.MIN_MATCHES, new North(), Match.JUNIOR);
+	}
+	
+	public Match(Match clone) {
+		this.week = clone.getWeek();
+		this.area = clone.getArea();
+		this.category = clone.getCategory();
+		this.allocatedReferees = clone.getAllocatedRefereesList();
 	}
 	
 	public Match(int week, Area area, String category) {
@@ -49,13 +58,33 @@ public class Match {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	
+	public String printReferee(int index) {
+		Referee[] referees = getAllocatedReferees();
+		if (referees != null) {
+			if (referees.length > index) {
+				Referee referee = referees[index];
+				return referee.printReferee();
+			} else {
+				return NO_REFEREE_MSG;
+			}
+		} else {
+			return NO_REFEREE_MSG;
+		}		
+	}
 
-
-
-	public List<Referee> getAllocatedReferees() {
+	public List<Referee> getAllocatedRefereesList() {
 		return allocatedReferees;
 	}
 
+	public Referee[] getAllocatedReferees() {
+		if (allocatedReferees != null) {
+			return allocatedReferees.toArray(new Referee[allocatedReferees.size()]);	
+		} else {
+			return null;
+		}
+	}
+	
 	public void setAllocatedReferees(List<Referee> allocatedReferees) {
 		setAllocatedReferees(allocatedReferees.toArray(new Referee[allocatedReferees.size()]));
 	}
@@ -225,8 +254,18 @@ public class Match {
 
 	@Override
 	public String toString() {
-		return "Match [week=" + week + ", area=" + area + ", category="
-				+ category + ", allocatedReferees=" + allocatedReferees + "]";
+		String week = Integer.toString(getWeek());
+		String category = getCategory();
+		String area = getArea().toString();
+		String[] refs = {"UNKNOWN","UNKNOWN"};
+		Referee[] referees = getAllocatedReferees();
+		if (referees != null) {
+			for (int i=0;i<2;i++) {
+				refs[i] = referees[i].toString(); 
+			}			
+		}
+		return String.format(DISPLAY_FORMAT, 
+			week,category,area,refs[0],refs[1]);
 	}
 
 	@Override

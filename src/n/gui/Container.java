@@ -20,7 +20,7 @@ public class Container extends JFrame {
 	
 	public Container(DataSource fileStore) {
 		this.setLocation(200, 200);
-		this.setSize(600, 500);
+		this.setSize(777,544);
 		this.setTitle(APP_NAME);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.dataSource = fileStore;
