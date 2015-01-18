@@ -46,7 +46,6 @@ public class Chart extends JComponent {
 	 * @param referee object being displayed as bar
 	 */
 	private void paintBar(Graphics2D g, int x, Referee referee){
-		System.out.println();
 		g.setColor(Color.black);
 		int barTop = bottom-referee.getAllocations()*pixelPerAllo;
 		g.fillRect(x, barTop, width, referee.getAllocations()*pixelPerAllo);
