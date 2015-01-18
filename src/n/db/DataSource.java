@@ -1,4 +1,7 @@
+//this class belongs to the n.db package
 package n.db;
+
+//import the following for use within this class
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -17,8 +20,11 @@ import n.models.Qualification;
 import n.models.Referee;
 import n.models.South;
 
+//this class is responsible for storing the Referee objects within the Referee array called 'referees'
 public class DataSource {
 	
+	//the input file name and size of  array have been declared as final as these will not change
+	//throughout the program
 	public static final String INPUT_REFEREE_FILE = "RefereesIn.txt";
 	public static final String OUTPUT_REFEREE_FILE = "RefereesOut.txt";
 	public static final String OUTPUT_MATCH_FILE = "MatchAllocs.txt";
@@ -250,7 +256,7 @@ public class DataSource {
 					/*
 					 *  .trim() on other than the first and the last token 
 					 *  would be redundant as .split() removes the 
-					 *  whitespaces between tokens
+					 *  white spaces between tokens
 					 */
 					String id = line[0].trim();
 					String firstName = line[1];

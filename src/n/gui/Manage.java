@@ -296,15 +296,21 @@ public class Manage extends JPanel implements ActionListener {
 				cbCentral.setEnabled(true);
 				cbSouth.setEnabled(true);
 				if (selected instanceof North) { 
-					cbNorth.setSelected(true); 
+					cbNorth.setSelected(true);
+					cbCentral.setSelected(false);
+					cbSouth.setSelected(false);
 					cbNorth.setEnabled(false);
 				}
 				if (selected instanceof Central) {
 					cbCentral.setSelected(true);
+					cbNorth.setSelected(false);
+					cbSouth.setSelected(false);
 					cbCentral.setEnabled(false);
 				}
 				if (selected instanceof South) {
 					cbSouth.setSelected(true);
+					cbCentral.setSelected(false);
+					cbNorth.setSelected(false);
 					cbSouth.setEnabled(false);
 				}
 			}
@@ -348,8 +354,8 @@ public class Manage extends JPanel implements ActionListener {
 											"New Referee", JOptionPane.INFORMATION_MESSAGE);
 									} else {
 										JOptionPane.showMessageDialog(null, 
-												"There was a error. "
-												+ "Check if the referee does not exist already.",
+												"You have reached the maximum "
+												+ "number of allowed referees " + DataSource.MAX_REFEREES,
 												"New Referee", JOptionPane.WARNING_MESSAGE);
 									}
 									refereesTab.refreshTableData();
