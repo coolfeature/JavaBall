@@ -1,5 +1,8 @@
 package n.models;
 
+/**
+ * The class represents a match region and referee home area.
+ */
 public class North implements Area {
 	
 	boolean travel;

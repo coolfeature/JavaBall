@@ -1,5 +1,8 @@
 package n.models;
 
+/**
+ * The class represents a match region and referee home area.
+ */
 public class Central implements Area {
 	
 	boolean travel;

@@ -12,6 +12,10 @@ import javax.swing.JTabbedPane;
 
 import n.db.DataSource;
 
+/**
+ * The main container displays the main TabbedPane and an Exist button for the
+ * program.
+ */
 public class Container extends JFrame {
 
 	public static final String APP_NAME = "JavaBall";
@@ -26,7 +30,11 @@ public class Container extends JFrame {
 		this.dataSource = fileStore;
 		this.layoutComponents();
 	}
-
+	
+	/**
+	 * This method instantiates the main TabbedPane object and its members.
+	 * The container uses BorderLayout for the components layout.
+	 */
 	private void layoutComponents() {
 		JPanel container = new JPanel(new BorderLayout());
 		JTabbedPane tabbedPane = new JTabbedPane();

@@ -3,6 +3,9 @@ package n.models;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The class represents a match object.
+ */
 public class Match {
 
 	public static final String FIELD_WEEK = "WEEK";
@@ -25,10 +28,17 @@ public class Match {
 	String category;
 	List<Referee> allocatedReferees;
 
+	/**
+	 * The default constructor instantiates the class with some default values.
+	 */
 	public Match() {
 		this(Match.MIN_MATCHES, new North(), Match.JUNIOR);
 	}
 	
+	/**
+	 * This constructor is used to clone the object.
+	 * @param clone
+	 */
 	public Match(Match clone) {
 		this.week = clone.getWeek();
 		this.area = clone.getArea();
@@ -36,36 +46,72 @@ public class Match {
 		this.allocatedReferees = clone.getAllocatedRefereesList();
 	}
 	
+	/**
+	 * This constructor instantiates the class with some specified instance 
+	 * variables.
+	 * @param week
+	 * @param area
+	 * @param category
+	 */
 	public Match(int week, Area area, String category) {
 		this.week = week;
 		this.area = area;
 		this.category = category;
 	}
 
+	/**
+	 * Getter method for week.
+	 * @return
+	 */
 	public int getWeek() {
 		return week;
 	}
 
+	/**
+	 * Setter method for week.
+	 * @param week
+	 */
 	public void setWeek(int week) {
 		this.week = week;
 	}
 
+	/**
+	 * Getter method for area
+	 * @return
+	 */
 	public Area getArea() {
 		return area;
 	}
 
+	/**
+	 * Setter method for area
+	 * @param area
+	 */
 	public void setArea(Area area) {
 		this.area = area;
 	}
 
+	/**
+	 * Getter method for category
+	 * @return
+	 */
 	public String getCategory() {
 		return category;
 	}
 
+	/**
+	 * Setter method for category
+	 * @param category
+	 */
 	public void setCategory(String category) {
 		this.category = category;
 	}
 	
+	/**
+	 * Returns a string with referee details formatted.
+	 * @param refereeArrayIndex
+	 * @return
+	 */
 	public String printRefereeDetails(int refereeArrayIndex) {
 		Referee[] referees = getAllocatedReferees();
 		if (referees != null) {
@@ -77,12 +123,22 @@ public class Match {
 		return NO_REFEREE_MSG;
 	}
 	
+	/**
+	 * Prints referees argument to console.
+	 * @param referees
+	 */
 	public void printReferees(Referee[] referees) {
+		if (referees == null ) return;
 		for (Referee r : referees) {
 			System.out.println(r.toString());
 		}
 	}
 
+	/**
+	 * Returns a string with this Match object details formatted for the 
+	 * display on the final report.
+	 * @return
+	 */
 	public String toReportString() {
 		String week = Integer.toString(getWeek());
 		String category = getCategory();
@@ -114,10 +170,18 @@ public class Match {
 			week,category,area,refs[0],refs[1]);
 	}
 
+	/**
+	 * Getter for the allocatedReferees.
+	 * @return
+	 */
 	public List<Referee> getAllocatedRefereesList() {
 		return allocatedReferees;
 	}
 
+	/**
+	 * Getter for the allocated referees that returns an array.
+	 * @return
+	 */
 	public Referee[] getAllocatedReferees() {
 		if (allocatedReferees != null) {
 			return allocatedReferees.toArray(new Referee[allocatedReferees.size()]);	
@@ -126,10 +190,14 @@ public class Match {
 		}
 	}
 	
-	/*
+
+	/**
+	 * Returns the referees selected for the match.
+	 * 
 	 * The selected referees are the most suitable allocated referees.
 	 * The number of selected referees is set in PER_MATCH final 
 	 * variable.
+	 * @return
 	 */
 	public Referee[] getSelectedReferees() {
 		Referee[] allocated = getAllocatedReferees() ;
@@ -145,11 +213,19 @@ public class Match {
 		return null;
 	}
 	
+	/**
+	 * Setter for allocated referees.
+	 * 
+	 * A convenience method for the setting of allocated referees with a List
+	 * argument.
+	 * @param allocatedReferees
+	 */
 	public void setAllocatedReferees(List<Referee> allocatedReferees) {
 		setAllocatedReferees(allocatedReferees.toArray(new Referee[allocatedReferees.size()]));
 	}
 
-	/*
+	
+	/**
 	 * Returns an array of referees sorted in the order of suitability for the 
 	 * match. The new array contains deeply copied elements from the source
 	 * array.
@@ -159,6 +235,8 @@ public class Match {
 	 * 
 	 * TODO: Consider moving this function elsewhere and perhaps making it 
 	 * static to decrease the size of the object instance.  
+	 * 
+	 * @param registeredReferees
 	 */
 	public void setAllocatedReferees(Referee[] registeredReferees) {
 		Referee[] referees = new Referee[registeredReferees.length];
@@ -313,6 +391,12 @@ public class Match {
 		allocatedReferees = Arrays.asList(cloneReferees(referees));
 	}
 	
+	/**
+	 * A convenience method used by setAllocatedReferees method to deep copy
+	 * Referee array elements.
+	 * @param allocated
+	 * @return a deep copy of the parameter array
+	 */
 	public Referee[] cloneReferees(Referee[] allocated) {
 		Referee[] suitableReferees = new Referee[allocated.length];
 		for (int i=0;i<allocated.length;i++) {

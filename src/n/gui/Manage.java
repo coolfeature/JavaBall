@@ -30,7 +30,9 @@ import n.models.Qualification;
 import n.models.Referee;
 import n.models.South;
 
-
+/**
+ * This is the tab that allows the user to search, delete and add referees. 
+ */
 public class Manage extends JPanel implements ActionListener {
 	
 	public static final String TAB_NAME = "Manage";
@@ -49,15 +51,15 @@ public class Manage extends JPanel implements ActionListener {
 	
 	DataSource dataSource;
 	Referees refereesTab;
-	
-	/*
-	 * The searching and updating of the referees has a minor flaw. It is
-	 * possible to have two referees with the same first name and surname
-	 * added but only one will ever be edited. This problem can be solved 
-	 * with the adding of search by id functionality not mentioned in the
-	 * specification document.
+
+	/**
+	 * The constructor takes a reference to the DataSource as well as the
+	 * Referees class where a table of referees is displayed that has to be
+	 * updated in response to user actions in this class.
+	 * 
+	 * @param fileStore
+	 * @param refereesTab
 	 */
-	
 	public Manage(DataSource fileStore,Referees refereesTab) {
 		this.dataSource = fileStore;
 		this.refereesTab = refereesTab;
@@ -65,6 +67,9 @@ public class Manage extends JPanel implements ActionListener {
 		layoutComponents();
 	}
 	
+	/**
+	 * Layouts the main components within the tab.
+	 */
 	private void layoutComponents() {
 		JPanel north = new JPanel(new GridLayout(1, 2));
 		JPanel searchSection = new JPanel(new GridLayout(3, 2));
@@ -148,11 +153,19 @@ public class Manage extends JPanel implements ActionListener {
 		this.add(editPanel);
 	}
 	
-	/*
-	 * Let's reuse the button for Edit and Save using the label to store the 
-	 * state. 
+	/**
+	 * This is the main method that recreates the form elements on the GUI 
+	 * depending on whether the user wants to add a new referee, search or
+	 * edit one.
+	 * 
+	 * In order to minimise the number of instance variables of this class
+	 * and promote loose coupling all variables needed to recreate the form
+	 * are kept within the method. 
+	 * 
+	 * The button for Edit and Save uses its label to store the state.
+	 *  
+	 * @param formAction
 	 */
-	
 	private void showAddOrEditForm(String formAction) {
 		editPanel.removeAll();
 		if (formAction == Manage.REFEREE_ADD) {
@@ -405,6 +418,11 @@ public class Manage extends JPanel implements ActionListener {
 		this.revalidate();
 	}
 
+	/**
+	 * Checks if the text input string for the name were valid.
+	 * @param name
+	 * @return boolean if input valid
+	 */
 	private boolean validateName(String name) {
 		if(!name.matches(".*\\d.*")){
 			if (!name.trim().equals("")) {
@@ -423,6 +441,12 @@ public class Manage extends JPanel implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Ensures the number input in the allocations text box is a valid number.
+	 * The method allows the input number to be smaller than the original.
+	 * @param allocations
+	 * @return whether allocations is a valid number
+	 */
     public boolean validateAllocations(String allocations) {
 		if(!allocations.matches(".*\\[a-zA-Z]+.*")){
     		try {
@@ -449,7 +473,18 @@ public class Manage extends JPanel implements ActionListener {
 		}
     }
 
-	
+	/**
+	 * Searches the referees array from the data source for a referee with 
+	 * the specified firstName and lastName.
+	 * 
+	 * The searching and updating of the referees has a minor flaw. It is
+	 * possible to have two referees with the same first name and surname
+	 * added but only one will ever be edited. This problem can be solved 
+	 * with the adding of search by id functionality not mentioned in the
+	 * specification document. No attempt was made to implement that.
+	 * @param firstName
+	 * @param lastName
+	 */
 	private void runSearch(String firstName, String lastName) {
 		referee = dataSource.search(firstName,lastName);
 		if (referee != null) {
@@ -465,7 +500,11 @@ public class Manage extends JPanel implements ActionListener {
 			this.revalidate();
 		}
 	}
-		
+	
+	/**
+	 * The listener method for ActionListener object that this class 
+	 * implements.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == btnFormCancel) {

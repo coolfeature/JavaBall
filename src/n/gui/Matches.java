@@ -30,6 +30,10 @@ import n.models.Match;
 import n.models.Referee;
 import n.models.TravelAreas;
 
+/**
+ * The class populates the matches class with controls allowing the user to
+ * schedule a new match with the most suitable allocated referees.
+ */
 public class Matches extends JPanel {
 
 	public static final String TAB_NAME = "Matches";
@@ -52,6 +56,14 @@ public class Matches extends JPanel {
 	int lastWeek;
 	JTextArea txtStatus;
 
+	/**
+	 * The display of Referees and Report has to be updated in response to 
+	 * actions in this class therefore references to these classes are 
+	 * passed as instance arguments.
+	 * @param dataSource
+	 * @param refereesTab
+	 * @param matchesTab
+	 */
 	public Matches(DataSource dataSource,Referees refereesTab,Report matchesTab) {
 		this.dataSource = dataSource;
 		this.reportTab = matchesTab;
@@ -65,12 +77,16 @@ public class Matches extends JPanel {
 		refresh();
 	}
 	
+	/**
+	 * The method draws layout components organised into two vertical panels
+	 * and redraws the contents of the panes depending on the state of the 
+	 * match instance variable.
+	 */
 	private void refresh() {
 		this.removeAll();
 		this.setLayout(new GridLayout(1, 2));
 		
 		String forAction;
-		
 		match.setWeek(lastWeek);
 		/*
 		 * The search returns a null or a reference to an object
@@ -95,9 +111,12 @@ public class Matches extends JPanel {
 		reportTab.refresh();
 		this.revalidate();
 	}
-	
-	/*
-	 * The method draws layout components organised into two vertical panels.
+
+	/**
+	 * Creates the left panel with controls created and set with accordance to
+	 * the parameter variable.
+	 * @param forAction
+	 * @return left panel
 	 */
 	private JComponent drawLeftPanel(String forAction) {
 		// Left Panel
@@ -193,7 +212,6 @@ public class Matches extends JPanel {
 			}
 		});
 
-		
 		// ------------------- SPINNER LISTENER -------------------------------
 		sprWeek.addChangeListener(new ChangeListener() {
 			@Override
@@ -207,7 +225,11 @@ public class Matches extends JPanel {
 		leftPanel.add(btnAddMatch,BorderLayout.SOUTH);
 		return leftPanel;
 	}
-	
+
+	/**
+	 * Creates the right panel.
+	 * @return the right panel.
+	 */
 	private JComponent drawRightPanel() {
 		JPanel rightPanel = new JPanel(new BorderLayout());
 		if (match == null || match.getAllocatedReferees() == null) {
@@ -233,6 +255,12 @@ public class Matches extends JPanel {
 		return rightPanel;
 	}
 	
+	/**
+	 * Instead of creating a pop-up boxes, information messages are displayed
+	 * in a text area on the GUI. The sets the text of the area in accordance 
+	 * to the parameter variable.
+	 * @param type
+	 */
 	private void setStatusMsg(String type) {
 		String msg = "";
 		switch (type) {

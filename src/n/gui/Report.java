@@ -8,6 +8,9 @@ import javax.swing.JTextArea;
 import n.db.DataSource;
 import n.models.Match;
 
+/**
+ * The class displays the match report.
+ */
 public class Report extends JPanel {
 	
 	public static final String TAB_NAME = "Report";
@@ -15,8 +18,12 @@ public class Report extends JPanel {
 	DataSource dataSource;
 	JTextArea txtReport;
 	
-	public Report(DataSource fileStore) {
-		this.dataSource = fileStore;
+	/**
+	 * The constructor takes the DataStore reference as an argument.
+	 * @param dataSource
+	 */
+	public Report(DataSource dataSource) {
+		this.dataSource = dataSource;
 		this.setLayout(new BorderLayout());
 		txtReport = new JTextArea("");
 		txtReport.setFont(new Font("Courier",Font.PLAIN,16));
@@ -24,6 +31,9 @@ public class Report extends JPanel {
 		refresh();
 	}
 	
+	/**
+	 * The method refreshes the displayed match report.
+	 */
 	public void refresh() {
 		Match[] matches = dataSource.getMatches();
 		if (matches != null) {

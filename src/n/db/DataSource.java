@@ -1,7 +1,5 @@
-//this class belongs to the n.db package
 package n.db;
 
-//import the following for use within this class
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -20,11 +18,13 @@ import n.models.Qualification;
 import n.models.Referee;
 import n.models.South;
 
-//this class is responsible for storing the Referee objects within the Referee array called 'referees'
+/**
+ * This class is responsible for storing the Referee objects within the Referee
+ * array called 'referees' and Match objects in an array 'matches'. All other 
+ * objects manipulating data in these array have a reference to this class.
+ */
 public class DataSource {
-	
-	//the input file name and size of  array have been declared as final as these will not change
-	//throughout the program
+
 	public static final String INPUT_REFEREE_FILE = "RefereesIn.txt";
 	public static final String OUTPUT_REFEREE_FILE = "RefereesOut.txt";
 	public static final String OUTPUT_MATCH_FILE = "MatchAllocs.txt";
@@ -32,18 +32,35 @@ public class DataSource {
 	private Referee[] referees = null;
 	private Match[] matches = null;
 	
+	/**
+	 * The constructor reads a list of referees in from the INPUT_REFEREE_FILE
+	 * file and populates the referees array. 
+	 */
 	public DataSource() {
 		this.referees = readIn();
 	}
 	
+	/**
+	 * Getter for matches
+	 * @return matches
+	 */
 	public Match[] getMatches() {
 		return matches;
 	}
 
+	/**
+	 * Setter for matches
+	 * @param matches
+	 */
 	public void setMatches(Match[] matches) {
 		this.matches = matches;
 	}
 
+	/**
+	 * Adds a match to the matches array.
+	 * @param match
+	 * @return whether add has been successful
+	 */
 	public boolean add(Match match) {
 		if (search(match) == null) {
 			List<Match> matchList = null;
@@ -60,6 +77,11 @@ public class DataSource {
 		}
 	}
 
+	/**
+	 * Removes a match from the matches array.
+	 * @param match
+	 * @return whether successful
+	 */
 	public boolean remove(Match match) {
 		List<Match> matchesList = new ArrayList<Match>(Arrays.asList(matches));
 		boolean found = false;
@@ -77,7 +99,12 @@ public class DataSource {
 		} 
 		return found;
 	}
-	
+
+	/**
+	 * Searches the matches array.
+	 * @param match
+	 * @return match or null
+	 */
 	public Match search(Match match) {
 		Match exists = null;
 		if (matches==null) {
@@ -92,14 +119,27 @@ public class DataSource {
 	}
 	
 	
+	/**
+	 * Getter for referees array.
+	 * @return
+	 */
 	public Referee[] getReferees() {
 		return referees;
 	}
 
+	/**
+	 * Setter for referees array.
+	 * @param referees
+	 */
 	public void setReferees(Referee[] referees) {
 		this.referees = referees;
 	}
 	
+	/**
+	 * Removes a referee from the referees array.
+	 * @param referee
+	 * @return whether successful
+	 */
 	public boolean remove(Referee referee) {
 		List<Referee> refereeList = new ArrayList<Referee>(Arrays.asList(referees));
 		boolean found = false;
@@ -118,6 +158,11 @@ public class DataSource {
 		return found;
 	}
 
+	/**
+	 * Replaces an existing referees object with the parameter object.
+	 * @param referee
+	 * @return if successful
+	 */
 	public boolean update(Referee referee) {
 		if (search(referee) != null) {
 			remove(referee);
@@ -127,6 +172,12 @@ public class DataSource {
 		}
 	}
 	
+	/**
+	 * Adds a new referee to the referees array if the array size does not
+	 * exceed MAX_REFEREES.
+	 * @param referee
+	 * @return whether successful
+	 */
 	public boolean add(Referee referee) {
 		if (referees.length < DataSource.MAX_REFEREES) {
 			if (search(referee) == null) {
@@ -143,6 +194,12 @@ public class DataSource {
 		}
 	}
 	
+	/**
+	 * Searches the referees array.
+	 * @param firstName
+	 * @param lastName
+	 * @return a referee if found or a null
+	 */
 	public Referee search(String firstName, String lastName) {
 		Referee referee = null;
 		for (Referee ref : referees) {
@@ -155,6 +212,11 @@ public class DataSource {
 		return referee;
 	}
 
+	/**
+	 * Searches referees array using object id.
+	 * @param referee
+	 * @return a referee if found or null.
+	 */
 	public Referee search(Referee referee) {
 		Referee exists = null;
 		for (Referee ref : referees) {
@@ -166,6 +228,11 @@ public class DataSource {
 		return exists;
 	}
 
+	/**
+	 * Returns a 2D array that is used with the table object in n.gui.Referees 
+	 * class.
+	 * @return the referees array in 2D or null if referees is empty.
+	 */
 	public Object[][] getRefereesData() {
 		if (referees != null && referees.length > 0) {
 			Object[][] refereesData = new Object[referees.length][Referee.FIELD_NAMES.length];	
@@ -185,10 +252,22 @@ public class DataSource {
 		}
 	}
 	
+	/**
+	 * A convenience method to return a referee id which uses overloading to
+	 * delegate a part of the job to another method.
+	 * @param referee
+	 * @return referee id
+	 */
 	public String getRefereeId(Referee referee) {
 		return getRefereeId(referee.getFirstName(),referee.getLastName());
 	}
 	
+	/**
+	 * A convenience method that returns a unique referee id.
+	 * @param firstName
+	 * @param lastName
+	 * @return referee id
+	 */
 	public String getRefereeId(String firstName,String lastName) {
 		String initials = firstName.substring(0,1) + lastName.substring(0,1);
 		int id = 1;
@@ -203,6 +282,10 @@ public class DataSource {
 		return initials + id;
 	}
 	
+	/**
+	 * Increases allocation count for the selected employee..
+	 * @param selected
+	 */
 	public void increaseRefereeAllocation (Referee[] selected) {
 		if (selected != null) {
 			for (int r=0;r<selected.length;r++) {
@@ -215,6 +298,10 @@ public class DataSource {
 		} 	
 	}
 	
+	/**
+	 * Decreases allocation count for the selected employee..
+	 * @param selected
+	 */
 	public void decreaseRefereeAllocation (Referee[] selected) {
 		if (selected != null) {
 			for (int r=0;r<selected.length;r++) {
@@ -227,6 +314,11 @@ public class DataSource {
 		} 	
 	}	
 	
+	/**
+	 * This method reads in the INPUT_REFEREE_FILE and turns the results into
+	 * an array.
+	 * @return referees
+	 */
 	private Referee[] readIn() {
 		List<Referee> refereeList = readIn(DataSource.INPUT_REFEREE_FILE);
 		if (refereeList != null) {
@@ -238,9 +330,11 @@ public class DataSource {
 		}
 	}
 	
-	/*
+	/**
 	 * Reads in filename as specified in INPUT_FILE_NAME and
 	 * return an ArrayList of Referee object or null
+	 * @param filename
+	 * @return referees as ArrayList
 	 */
 	public List<Referee> readIn(String filename) {
 		List<Referee> referees = new ArrayList<Referee>();
@@ -289,8 +383,8 @@ public class DataSource {
 		return referees;
 	}
 
-	/*
-	 * Saves the Report
+	/**
+	 * Outputs sorted referees array to OUTPUT_REFEREE_FILE.
 	 */
 	public void writeReferees() {
 		if (referees == null) {
@@ -320,9 +414,9 @@ public class DataSource {
 			e.printStackTrace();
 		}
 	}
-	
-	/*
-	 * Writes the Report
+
+	/**
+	 * Outputs the match report to OUTPUT_MATCH_FILE.
 	 */
 	public void writeReport() {
 		if (matches == null) {
@@ -348,6 +442,9 @@ public class DataSource {
 		}
 	}
 	
+	/**
+	 * A convenience method for printing referees array to the console.
+	 */
 	public void printReferees() {
 		if (referees != null) {
 			for (Referee r : referees) {

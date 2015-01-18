@@ -1,5 +1,8 @@
 package n.models;
 
+/**
+ * Represents a referee.
+ */
 public class Referee implements Comparable<Referee> {
 	
 	public static final int[] SELECTED_REFEREES = {0,1};
@@ -24,6 +27,12 @@ public class Referee implements Comparable<Referee> {
 	Area homeArea;
 	TravelAreas travelAreas;
 	
+	/**
+	 * Used to construct an instance with first and last name only.
+	 * Uses defaults for other instance variables.
+	 * @param firstName
+	 * @param lastName
+	 */
 	public Referee(String firstName,String lastName) {
 		this.id = "";
 		this.firstName = firstName;
@@ -34,6 +43,17 @@ public class Referee implements Comparable<Referee> {
 		this.travelAreas = new TravelAreas(this.homeArea);
 	}
 	
+	/**
+	 * Used to construct an instance will all instance variables passed in the
+	 * constructor.
+	 * @param id
+	 * @param firstName
+	 * @param lastName
+	 * @param qualification
+	 * @param allocations
+	 * @param homeArea
+	 * @param travelAreas
+	 */
 	public Referee(String id,String firstName,String lastName
 			,Qualification qualification,int allocations
 			,Area homeArea,TravelAreas travelAreas) {
@@ -46,6 +66,10 @@ public class Referee implements Comparable<Referee> {
 		this.travelAreas = travelAreas;
 	}
 
+	/**
+	 * Used for creating object instance clones.
+	 * @param clone
+	 */
 	public Referee(Referee clone) {
 		this.id = clone.getId();
 		this.firstName = clone.getFirstName();
@@ -56,58 +80,114 @@ public class Referee implements Comparable<Referee> {
 		this.travelAreas = clone.getTravelAreas();
 	}
 	
+	/**
+	 * Getter for id.
+	 * @return id
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * Setter for id.
+	 * @param id
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * Getter for first name.
+	 * @return first name
+	 */
 	public String getFirstName() {
 		return firstName;
 	}
 
+	/**
+	 * Setter for first name.
+	 * @param firstName
+	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
+	/**
+	 * Getter for last name.
+	 * @return last name
+	 */
 	public String getLastName() {
 		return lastName;
 	}
 
+	/**
+	 * Setter for last name.
+	 * @param lastName
+	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
+	/**
+	 * Getter for qualification
+	 * @return qualification
+	 */
 	public Qualification getQualification() {
 		return qualification;
 	}
 
+	/**
+	 * Setter for Qualification
+	 * @param qualification
+	 */
 	public void setQualification(Qualification qualification) {
 		this.qualification = qualification;
 	}
 
+	/**
+	 * Getter for allocations.
+	 * @return allocation
+	 */
 	public int getAllocations() {
 		return allocations;
 	}
 
+	/**
+	 * Setter for allocaitons.
+	 * @param allocations
+	 */
 	public void setAllocations(int allocations) {
 		this.allocations = allocations;
 	}
 
+	/**
+	 * Getter for home area.
+	 * @return home area.
+	 */
 	public Area getHomeArea() {
 		return homeArea;
 	}
 	
+	/**
+	 * Increases the number of allocation by 1.
+	 */
 	public void increaseAllocations() {
 		this.allocations++;
 	}
 	
+	/**
+	 * Decreases the number of allocation by 1.
+	 */
 	public void decreaseAllocations() {
-		this.allocations--;
+		if (this.allocations > 0) {
+			this.allocations--;	
+		}
 	}
 	
+	/**
+	 * Setter for home area.
+	 * @param homeArea
+	 */
 	public void setHomeArea(Area homeArea) {
 		this.homeArea = homeArea;
 		if (homeArea instanceof North) {
@@ -119,14 +199,27 @@ public class Referee implements Comparable<Referee> {
 		}
 	}
 
+	/**
+	 * Getter for travel areas.
+	 * @return
+	 */
 	public TravelAreas getTravelAreas() {
 		return travelAreas;
 	}
 
+	/**
+	 * Setter for travel area.
+	 * @param travelAreas
+	 */
 	public void setTravelAreas(TravelAreas travelAreas) {
 		this.travelAreas = travelAreas;
 	}
 
+	/**
+	 * Returns a formatted with with the instance variables of this class used
+	 * by the GUI classes.
+	 * @return formatted string with the values of instance variables.
+	 */
 	public String printRefereeRecord() {
 		return "Id: " + this.getId() 
 				+ "\nName: " + this.getFirstName() + " " + this.getLastName()
@@ -136,6 +229,12 @@ public class Referee implements Comparable<Referee> {
 				+ "\nTravels: " + this.getTravelAreas().toString();
 	}
 	
+	/**
+	 * Returns a formatted with with the instance variables of this class used
+	 * by the GUI classes.
+	 * @param format
+	 * @return formatted string with the values of instance variables.
+	 */
 	public String printRefereeRecord(String format) {
 		return String.format(format, this.getId()
 				,this.getFirstName(),this.getLastName()
@@ -144,19 +243,23 @@ public class Referee implements Comparable<Referee> {
 				,this.getHomeArea().toString()
 				,this.getTravelAreas().toString());
 	}
-		
-	@Override
-	public String toString() {
-		return this.getFirstName() + " " + this.getLastName();
-	}
 
+	/**
+	 * Checks if the id instance variable of the parameter Referee object
+	 * equals the id instance variable of this instance.
+	 * @param other
+	 * @return if id matches
+	 */
 	public boolean idMatch(Referee other) {
 		return this.getId().equals(other.getId()) ? true : false;
 	}
 
-	/*
+
+	/**
+	 * An overridden method used by Array.sort().
+	 * 
 	 * Sorting should be done on first two characters of the ID
-	 * and then the number
+	 * and then the number.
 	 */
 	@Override
 	public int compareTo(Referee other) {
@@ -171,7 +274,12 @@ public class Referee implements Comparable<Referee> {
 			return areEqual;
 		}
 	}
-
+	
+	@Override
+	public String toString() {
+		return this.getFirstName() + " " + this.getLastName();
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

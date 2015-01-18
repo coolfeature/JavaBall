@@ -1,5 +1,8 @@
 package n.models;
 
+/**
+ * An object representing areas a referee can travel to.
+ */
 public class TravelAreas {
 
 	public static final Area[] AREAS = {new North(),new Central(),new South()};
@@ -8,42 +11,82 @@ public class TravelAreas {
 	Central central;
 	South south;
 
+	/**
+	 * Constructs object instance with the specified home area.
+	 * @param homeArea
+	 */
 	public TravelAreas(Area homeArea) {
 		this.north = homeArea instanceof North ? (North) homeArea : new North(false);
 		this.central = homeArea instanceof Central ? (Central) homeArea : new Central(false);
 		this.south = homeArea instanceof South ? (South) homeArea : new South(false);
 	}
 	
+	/**
+	 * Constructs object instance setting the flags for the areas the referee 
+	 * is willing to travel to.
+	 * @param north
+	 * @param central
+	 * @param south
+	 */
 	public TravelAreas(North north,Central central,South south) {
 		this.north = north;
 		this.central = central;
 		this.south = south;
 	}
 
+	/**
+	 * Getter for north.
+	 * @return
+	 */
 	public North getNorth() {
 		return north;
 	}
 
+	/**
+	 * Setter for north.
+	 * @param north
+	 */
 	public void setNorth(North north) {
 		this.north = north;
 	}
 
+	/**
+	 * Getter for central.
+	 * @return central
+	 */
 	public Central getCentral() {
 		return central;
 	}
 
+	/**
+	 * Setter for central.
+	 * @param central
+	 */
 	public void setCentral(Central central) {
 		this.central = central;
 	}
 
+	/**
+	 * Getter for south.
+	 * @return
+	 */
 	public South getSouth() {
 		return south;
 	}
 
+	/**
+	 * Setter for south.
+	 * @param south
+	 */
 	public void setSouth(South south) {
 		this.south = south;
 	}
 	
+	/**
+	 * Checks the flags of the instance area objects.
+	 * @param area
+	 * @return whether willing to travel.
+	 */
 	public boolean travelsTo(Area area) {
 		if (area instanceof North) {
 			return getNorth().getTravel();

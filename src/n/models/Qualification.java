@@ -1,6 +1,8 @@
 package n.models;
 
-
+/**
+ * An object representing a referee qualification.
+ */
 public class Qualification {
 	
 	public static final String[] AWARDING_BODIES = {"NJB","IJB"};
@@ -17,10 +19,21 @@ public class Qualification {
 	 * String argument is not valid which should never occur. 
 	 */
 	
+	/**
+	 * Construct the object instance from a string parameter. 
+	 * The parameter string should have the correct.
+	 * @param qualification
+	 */
 	public Qualification (String qualification) {
 		this(inferAwardingBody(qualification),inferLevel(qualification));
 	}
 	
+	/**
+	 * Construct the object instance using the awarding body and level 
+	 * parameters.
+	 * @param awardingBody
+	 * @param level
+	 */
 	public Qualification (String awardingBody, short level) {
 		for (String ab : Qualification.AWARDING_BODIES) {
 			if (awardingBody.equals(ab)) {
@@ -34,6 +47,11 @@ public class Qualification {
 		}
 	}
 
+	/**
+	 * Infers the awarding body string from the qualification string.
+	 * @param qualification
+	 * @return the awarding body string
+	 */
 	private static String inferAwardingBody(String qualification) {
 		if (qualification.length() > 3) {
 			return qualification.substring(0,3);
@@ -42,6 +60,11 @@ public class Qualification {
 		}
 	}
 	
+	/**
+	 * Infer the qualification level from the qualification string.
+	 * @param qualification
+	 * @return the qualification level
+	 */
 	private static short inferLevel(String qualification) {
 		if (qualification.length() > 3) {
 			try {
@@ -54,6 +77,14 @@ public class Qualification {
 		}
 	}
 	
+	/**
+	 * A convenience method for determining at what index does the awarding 
+	 * body string is defined in the AWARDING_BODIES array final variable.
+	 * 
+	 * The method is used by the GUI classes.
+	 * 
+	 * @return index position
+	 */
 	public int getAwardingBodyIndex() {
 		int awardingBodyIndex = -1;
 		for (int i=0;i<Qualification.AWARDING_BODIES.length;i++) {
@@ -65,6 +96,14 @@ public class Qualification {
 		return awardingBodyIndex;
 	}
 	
+	/**
+	 * A convenience method for determining at what index does the 
+	 * qualification level is defined in the LEVELS array final variable.
+	 * 
+	 * The method is used by the GUI classes.
+	 * 
+	 * @return index position
+	 */
 	public int getLevelIndex() {
 		int levelIndex = -1;
 		for (int i=0;i<Qualification.LEVELS.length;i++) {
@@ -76,32 +115,53 @@ public class Qualification {
 		return levelIndex;
 	}
 	
+	/**
+	 * Getter for awarding body.
+	 * @return awarding body string.
+	 */
 	public String getAwardingBody() {
 		return awardingBody;
 	}
 
+	/**
+	 * Setter for awarding body.
+	 * @param awardingBody
+	 */
 	public void setAwardingBody(String awardingBody) {
 		this.awardingBody = awardingBody;
 	}
 
+	/**
+	 * Getter for level.
+	 * @return level
+	 */
 	public short getLevel() {
 		return level;
 	}
 
+	/**
+	 * Setter for level
+	 * @param level
+	 */
 	public void setLevel(short level) {
 		this.level = level;
 	}
 	
-	@Override
-	public String toString() {
-		return awardingBody + level;
-	}
-	
+	/**
+	 * Returns category based on the instance qualification level.
+	 * @return
+	 */
 	public String getCategory() {
 		return level == Qualification.LEVELS[0] ? 
 			Match.JUNIOR : Match.SENIOR;
 	}
 
+	@Override
+	public String toString() {
+		return awardingBody + level;
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -137,6 +197,4 @@ public class Qualification {
 			return false;
 		return true;
 	}
-
-
 }
