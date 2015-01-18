@@ -1,9 +1,9 @@
    ID      FIRST NAME       LAST NAME   QUALIFICATION     ALLOCATIONS       HOME AREA     TRAVEL AREA
   DG1            Dave            Gray            NJB1               3         Central             YYY
   DM1           Denis        Montague            IJB1               3           North             YYY
-  JL1            Jack             Low            IJB2               2           South             NYY
+  JL1            Jack             Low            IJB4               3           South             NYY
   KL1         Kenneth        Lorrimer            IJB2               6           South             YYY
-  KL2         Kenneth         Lindsay            NJB3              12         Central             YYY
+  KL2         Kenneth         Lindsay            NJB3              13         Central             YYY
   MD1           Miles           Davis            IJB3               7           North             YYY
   SC1          Szymon           Czaja            IJB4               3           North             YNN
   TT1             Tim            Toms            IJB1               2         Central             NYN

@@ -227,16 +227,38 @@ public class Match {
 	
 	/**
 	 * Returns an array of referees sorted in the order of suitability for the 
-	 * match. The new array contains deeply copied elements from the source
-	 * array.
+	 * match. The new array contains deeply copied elements (without 
+	 * descendants) from the source array.
 	 * 
-	 * NOTE: The goal was to implement the method using array algorithms only
-	 * avoiding the use of Lists or Comparators. 
+	 * @NOTES: 
+	 * 	
+	 * 1) The goal was to implement the method using array algorithms only
+	 * avoiding the use of Lists or Comparators.
+	 * 
+	 * 2) The suitable referees are selected only on the basis of their
+	 * qualification and the willingness to travel to the destination area
+	 * does not preclude them from being allocated as the potential candidates
+	 * although lack of willingness of going to the match area would push them
+	 * onto the end of the list they would still appear on it. The 
+	 * specification does not explicitly say whether they should be excluded 
+	 * from the list of potential candidates.
+	 * 
+	 * 3) The method returns a deeply copied array of allocation candidates 
+	 * sorted in descending order. The array is deeply copied only on the level
+	 * of array elements. The copies of these elements however will still have
+	 * references to the descendants of the original object. Therefore if the 
+	 * qualification of an allocated referee changes, this will be reflected
+	 * on the list of all available referees as well as the allocated referee 
+	 * which was copied from the original array before allocation. The 
+	 * specification does not explicitly require the allocated referees to 
+	 * show their qualification at the time of allocation after it has been 
+	 * changed post-allocation therefore no attempt was made to make the copy 
+	 * of the array along with the element descendants.
 	 * 
 	 * TODO: Consider moving this function elsewhere and perhaps making it 
 	 * static to decrease the size of the object instance.  
 	 * 
-	 * @param registeredReferees
+	 * @param registered referees
 	 */
 	public void setAllocatedReferees(Referee[] registeredReferees) {
 		Referee[] referees = new Referee[registeredReferees.length];
@@ -393,7 +415,10 @@ public class Match {
 	
 	/**
 	 * A convenience method used by setAllocatedReferees method to deep copy
-	 * Referee array elements.
+	 * Referee array elements. The copy is done only on the level of array
+	 * elements therefore the references to the descendant object will be
+	 * preserved in the copied array.
+	 * 
 	 * @param allocated
 	 * @return a deep copy of the parameter array
 	 */

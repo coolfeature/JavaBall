@@ -1,3 +1,2 @@
   WEEK    GROUP      AREA            REFEREE 1            REFEREE 2
-     1   Junior     North       Denis Montague            Dave Gray
-     2   Junior     North       Denis Montague            Dave Gray
+     2   Senior   Central      Kenneth Lindsay             Jack Low
