@@ -235,13 +235,10 @@ public class Match {
 	 * 1) The goal was to implement the method using array algorithms only
 	 * avoiding the use of Lists or Comparators.
 	 * 
-	 * 2) The suitable referees are selected only on the basis of their
-	 * qualification and the willingness to travel to the destination area
-	 * does not preclude them from being allocated as the potential candidates
-	 * although lack of willingness of going to the match area would push them
-	 * onto the end of the list they would still appear on it. The 
-	 * specification does not explicitly say whether they should be excluded 
-	 * from the list of potential candidates.
+	 * 2) The suitable referees are selected on the basis of their 
+	 * qualification and the willingness to travel to the match area. The
+	 * meeting of the two requirements is essential in order to be considered
+	 * for allocation.
 	 * 
 	 * 3) The method returns a deeply copied array of allocation candidates 
 	 * sorted in descending order. The array is deeply copied only on the level
@@ -265,15 +262,14 @@ public class Match {
 		int current = 0;
 
 		/* --------------------------------------------------------------------
-		 * The referees should suitably qualified in order to be considered for
-		 * allocation therefore the preference is given with respect to area 
-		 * and the least number of allocations
+		 * The referees should suitably qualified and willing to travel to the 
+		 * match area in order to be considered for allocation. The preference 
+		 * is given with respect to area and the least number of allocations
 		 */
 		
-		// Select referees with suitable qualifications
 		for (int i = 0; i < registeredReferees.length; i++) {
-			if (registeredReferees[i].getQualification().getCategory()
-					.equals(this.getCategory())) {
+			if (registeredReferees[i].getQualification().getCategory().equals(this.getCategory()) 
+					&& registeredReferees[i].getTravelAreas().travelsTo(this.getArea()) ) {
 				referees[current] = registeredReferees[i];
 				current++;
 			}
