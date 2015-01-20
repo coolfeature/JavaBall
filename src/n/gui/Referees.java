@@ -16,8 +16,7 @@ import n.models.Referee;
  */
 public class Referees extends JPanel {
 	
-	/*declares the instance variables for this class as final (as they will not change), 
-	 * which is the serialVersionUID; and the tab name that is displayed at the top of the Gui */
+	// declares static variables for this class 
 	private static final long serialVersionUID = 1L;
 	public static final String TAB_NAME = "Referees";
 	

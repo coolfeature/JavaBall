@@ -35,13 +35,13 @@ import n.models.South;
  */
 public class Manage extends JPanel implements ActionListener {
 	
-	// instance variable for Manage's tab name within the GUI
+	// static variable for tab name within the GUI
 	public static final String TAB_NAME = "Manage";
 	
-	//instance variable of serialVersionUID
+	// static variable of serialVersionUID
 	private static final long serialVersionUID = 1L;
 	
-	// instance variables for assisting GUI within the Manage tab for providing names for labels
+	// static variables for assisting GUI within the Manage tab for providing names for labels
 	private static final String REFEREE_EDIT = "Edit";
 	private static final String REFEREE_SAVE = "Save";
 	private static final String REFEREE_ADD = "Add";

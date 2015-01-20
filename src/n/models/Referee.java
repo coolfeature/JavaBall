@@ -298,7 +298,12 @@ public class Referee implements Comparable<Referee> {
 				+ ((travelAreas == null) ? 0 : travelAreas.hashCode());
 		return result;
 	}
-
+	
+	/**
+	 * Method to allow you to check the state of an object being passed in.
+	 * @param obj
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
