@@ -8,7 +8,6 @@ import java.util.List;
  */
 public class Match {
 	
-	//declared final instance variables for the Match object, these will remain constant
 	public static final String FIELD_WEEK = "WEEK";
 	public static final String FIELD_AREA = "AREA";
 	public static final String FIELD_GROUP= "GROUP";
@@ -442,8 +441,11 @@ public class Match {
 		return result;
 	}
 	
-	/* boolean method that allows you to return true or false if the Object being passed as a
-	 * parameter is the same as the current Match object. */
+	/**
+	 * Method to check the state of an object being passed in.
+	 * @param obj
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)  //if the current object is equal to one being passed in return true

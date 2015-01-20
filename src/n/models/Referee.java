@@ -300,7 +300,7 @@ public class Referee implements Comparable<Referee> {
 	}
 	
 	/**
-	 * Method to allow you to check the state of an object being passed in.
+	 * Method to check the state of an object being passed in.
 	 * @param obj
 	 * @return boolean
 	 */

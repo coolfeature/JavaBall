@@ -5,41 +5,54 @@ package n.models;
  */
 public class Central implements Area {
 	
-	boolean travel;  //boolean variable to determine whether the referee can travel to or not
+	boolean travel;
 	
-	/*default constructor, when an object of this class is created travel variable initialised 
-	 * to false */	
+	/** 
+	 * default constructor
+	 */
 	public Central() {
 		this.travel = false;
 	}
 	
-	/*non-default constructor, when a boolean variable is passed in as a parameter, travel is 
-	 * initialised to this  */
+	/**non-default constructor
+	 * @param travel
+	 */
 	public Central(boolean travel) {
 		this.travel = travel;
 	}
 
-	//public accessor method that returns the state of travel as a boolean
+	/**
+	 * Getter method that returns the state of travel
+	 * @return travel
+	 */
 	@Override
 	public boolean getTravel() {
 		return travel;
 	}
 	
-	/*public modifier method that allows you to change the state of travel by passing 
-	 * it in as a parameter */
+	/**
+	 * Setter for travel
+	 * @param travel
+	 */
 	@Override
 	public void setTravel(boolean travel) {
-		this.travel = travel;
-		
+		this.travel = travel;		
 	}
 	
-	//returns a String indicating Y or N based on whether boolean variable is true or false
+	/**
+	 * Getter for TravelFlag
+	 * @return getTravel
+	 */
 	@Override
 	public String getTravelFlag() {
 		return getTravel() ? "Y" : "N";
 	}
 	
-	//if the other parameter region being passed in is adjacent then return true otherwise false
+	/**
+	 * Checks whether an area is adjacent to another
+	 * @param other
+	 * @return boolean
+	 */
 	@Override
 	public boolean isAdjacent(Area other) {
 		return true;
@@ -61,7 +74,7 @@ public class Central implements Area {
 	
 
 	/**
-	 * Method to allow you to check the state of an object being passed in.
+	 * Method to check the state of an object being passed in.
 	 * @param obj
 	 * @return boolean
 	 */

@@ -7,15 +7,13 @@ public class North implements Area {
 	
 	boolean travel;
 	
-	/** default constructor, when an object of this class is created travel variable 
-	 * initialised to false */
+	/** default constructor */
 	public North() {
 		this.travel = false;
 	}
 	
 	/**
-	 * non-default constructor, when a boolean variable is passed in as a parameter, 
-	 * travel is initialised to this 
+	 * non-default constructor
 	 * @param travel
 	 */
 	public North(boolean travel) {
@@ -70,7 +68,6 @@ public class North implements Area {
 			return true;	
 		}
 	}
-
 	
 	/**
 	 * 
@@ -85,7 +82,7 @@ public class North implements Area {
 	}
 
 	/**
-	 * Method to allow you to check the state of an object being passed in.
+	 * Method to check the state of an object being passed in.
 	 * @param obj
 	 * @return boolean
 	 */
