@@ -7,7 +7,7 @@ import java.util.List;
  * The class represents a match object.
  */
 public class Match {
-
+	
 	public static final String FIELD_WEEK = "WEEK";
 	public static final String FIELD_AREA = "AREA";
 	public static final String FIELD_GROUP= "GROUP";
@@ -440,14 +440,19 @@ public class Match {
 		result = prime * result + week;
 		return result;
 	}
-
+	
+	/**
+	 * Method to check the state of an object being passed in.
+	 * @param obj
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj)  //if the current object is equal to one being passed in return true
 			return true;
-		if (obj == null)
+		if (obj == null)  //if it is null return false
 			return false;
-		if (getClass() != obj.getClass())
+		if (getClass() != obj.getClass())  //perform a check to ensure they have the same Match class
 			return false;
 		Match other = (Match) obj;
 		if (allocatedReferees == null) {

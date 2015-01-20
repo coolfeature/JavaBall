@@ -7,18 +7,32 @@ public class North implements Area {
 	
 	boolean travel;
 	
+	/** default constructor */
 	public North() {
 		this.travel = false;
 	}
 	
+	/**
+	 * non-default constructor
+	 * @param travel
+	 */
 	public North(boolean travel) {
 		this.travel = travel;
 	}
-
+	
+	/**
+	 * Getter method that returns the state of travel
+	 * @return travel
+	 */
 	@Override
 	public boolean getTravel() {
 		return travel;
 	}
+	
+	/**
+	 * Setter for travel
+	 * @param travel
+	 */
 	@Override
 	public void setTravel(boolean travel) {
 		this.travel = travel;
@@ -31,12 +45,21 @@ public class North implements Area {
 				.lookupClass().getName().split("\\.");
 		return tokens[tokens.length-1];
 	}
-
+	
+	/**
+	 * Getter for TravelFlag
+	 * @return getTravel
+	 */
 	@Override
 	public String getTravelFlag() {
 		return getTravel() ? "Y" : "N";
 	}
 
+	/**
+	 * Checks whether an area is adjacent to another
+	 * @param other
+	 * @return boolean
+	 */
 	@Override
 	public boolean isAdjacent(Area other) {
 		if (other instanceof South) {
@@ -45,7 +68,11 @@ public class North implements Area {
 			return true;	
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @return result
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -54,6 +81,11 @@ public class North implements Area {
 		return result;
 	}
 
+	/**
+	 * Method to check the state of an object being passed in.
+	 * @param obj
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

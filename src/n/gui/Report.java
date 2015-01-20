@@ -13,9 +13,9 @@ import n.models.Match;
  */
 public class Report extends JPanel {
 	
-	/** instance variable for the report tab's name */
+	/** static variable for the report tab's name */
 	public static final String TAB_NAME = "Report";
-	/** instance variable for serialVersionUID set to 1L */
+	/** static variable for serialVersionUID set to 1L */
 	private static final long serialVersionUID = 1L;
 	
 	/** Instance variables for DataSource and JTextArea also found in this class */

@@ -7,28 +7,52 @@ public class Central implements Area {
 	
 	boolean travel;
 	
+	/** 
+	 * default constructor
+	 */
 	public Central() {
 		this.travel = false;
-	}	
+	}
+	
+	/**non-default constructor
+	 * @param travel
+	 */
 	public Central(boolean travel) {
 		this.travel = travel;
 	}
 
+	/**
+	 * Getter method that returns the state of travel
+	 * @return travel
+	 */
 	@Override
 	public boolean getTravel() {
 		return travel;
 	}
+	
+	/**
+	 * Setter for travel
+	 * @param travel
+	 */
 	@Override
 	public void setTravel(boolean travel) {
-		this.travel = travel;
-		
+		this.travel = travel;		
 	}
-
+	
+	/**
+	 * Getter for TravelFlag
+	 * @return getTravel
+	 */
 	@Override
 	public String getTravelFlag() {
 		return getTravel() ? "Y" : "N";
 	}
 	
+	/**
+	 * Checks whether an area is adjacent to another
+	 * @param other
+	 * @return boolean
+	 */
 	@Override
 	public boolean isAdjacent(Area other) {
 		return true;
@@ -47,6 +71,13 @@ public class Central implements Area {
 		result = prime * result + (travel ? 1231 : 1237);
 		return result;
 	}
+	
+
+	/**
+	 * Method to check the state of an object being passed in.
+	 * @param obj
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

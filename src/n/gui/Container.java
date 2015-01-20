@@ -22,6 +22,10 @@ public class Container extends JFrame {
 	private static final long serialVersionUID = 1L;
 	DataSource dataSource = null;
 	
+	/**
+	 * Constructor
+	 * @param fileStore
+	 */
 	public Container(DataSource fileStore) {
 		this.setLocation(200, 200);
 		this.setSize(777,544);
