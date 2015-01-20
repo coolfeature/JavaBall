@@ -13,8 +13,12 @@ import n.models.Match;
  */
 public class Report extends JPanel {
 	
+	/** instance variable for the report tab's name */
 	public static final String TAB_NAME = "Report";
+	/** instance variable for serialVersionUID set to 1L */
 	private static final long serialVersionUID = 1L;
+	
+	/** Instance variables for DataSource and JTextArea also found in this class */
 	DataSource dataSource;
 	JTextArea txtReport;
 	
@@ -24,8 +28,14 @@ public class Report extends JPanel {
 	 */
 	public Report(DataSource dataSource) {
 		this.dataSource = dataSource;
+		
+		//set the layout for the Report tab to BorderLayout
 		this.setLayout(new BorderLayout());
+		
+		//instantiate and initialise the txtReport variable as a JTextArea
 		txtReport = new JTextArea("");
+		
+		//set the font for the report within the text area to Courier, plain at size 16
 		txtReport.setFont(new Font("Courier",Font.PLAIN,16));
 		this.add(txtReport, BorderLayout.CENTER);
 		refresh();

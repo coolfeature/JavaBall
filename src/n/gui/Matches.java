@@ -36,23 +36,30 @@ import n.models.TravelAreas;
  */
 public class Matches extends JPanel {
 
+	// instance variable for the Matches tab name 
 	public static final String TAB_NAME = "Matches";
-	public static final String MSG_NOMATCHES = "No Matches";
 	
+	// instance variables for assisting GUI within the Match tab for providing names for labels
+	public static final String MSG_NOMATCHES = "No Matches";
 	private static final String MATCH_REMOVE = "Remove";
 	private static final String MATCH_ALLOCATE = "Allocate";
 	
+	// instance variables for messages to be displayed within the match tab
 	private static final String MSG_ALLOCATEFAIL = "ALLOCATEFAIL";
 	private static final String MSG_SAVEFAIL = "SAVEFAIL";
 	private static final String MSG_FREESLOT = "FREESLOT";
 	private static final String MSG_SLOTTAKEN = "SLOTTAKEN";
 	private static final String MSG_RMFAIL = "RMFAIL";
+	
+	//instance variable of serialVersionUID
 	private static final long serialVersionUID = 1L;
 	
+	// instances of DataSource, Referees, Report and Match are also used within this class
 	DataSource dataSource;
 	Referees refereesTab;
 	Report reportTab;
 	Match match;
+	
 	int lastWeek;
 	JTextArea txtStatus;
 

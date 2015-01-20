@@ -35,20 +35,26 @@ import n.models.South;
  */
 public class Manage extends JPanel implements ActionListener {
 	
+	// instance variable for Manage's tab name within the GUI
 	public static final String TAB_NAME = "Manage";
+	
+	//instance variable of serialVersionUID
 	private static final long serialVersionUID = 1L;
 	
+	// instance variables for assisting GUI within the Manage tab for providing names for labels
 	private static final String REFEREE_EDIT = "Edit";
 	private static final String REFEREE_SAVE = "Save";
 	private static final String REFEREE_ADD = "Add";
 	private static final String REFEREE_CANCEL = "Cancel";
 	private static final String REFEREE_DELETE = "Delete";
 	
+	// instance variables for GUI components
 	JPanel editPanel;
 	JButton btnFormCancel;
 	JTable table;
-	Referee referee;
 	
+	// instance of Referee, DataSource and Referees are also used within this class
+	Referee referee;
 	DataSource dataSource;
 	Referees refereesTab;
 
