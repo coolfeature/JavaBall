@@ -156,13 +156,15 @@ public class Qualification {
 			Match.JUNIOR : Match.SENIOR;
 	}
 
-	@Override
+	/**
+	 * toString method that will return the awarding body
+	 * and the qualification of the referee.
+	 */
 	public String toString() {
 		return awardingBody + level;
 	}
 	
 	
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -179,7 +181,6 @@ public class Qualification {
 	 * @param obj
 	 * @return boolean
 	 */
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

@@ -5,6 +5,7 @@ package n.models;
  */
 public class Referee implements Comparable<Referee> {
 	
+	//static final instance variables of this class which will remain constant
 	public static final int[] SELECTED_REFEREES = {0,1};
 	public static final String LIST_RECORD_FORMAT = "%3s %12s %12s %5s %3s %8s %3s" ;
 	public static final String FILE_RECORD_FORMAT = "%5s %15s %15s %15s %15s %15s %15s" ;
@@ -19,6 +20,7 @@ public class Referee implements Comparable<Referee> {
 		,FIELD_LAST_NAME,FIELD_QUALIFICATION,FIELD_ALLOCATIONS,FIELD_HOME_AREA
 		,FIELD_TRAVEL_AREA};
 	
+	//remaining instance variables of this class, with objects that will also be used.
 	String id;
 	String firstName;
 	String lastName;
@@ -275,12 +277,14 @@ public class Referee implements Comparable<Referee> {
 		}
 	}
 	
-	@Override
+	/**
+	 * toString method that will return the Referee first name and last name.
+	 */
 	public String toString() {
 		return this.getFirstName() + " " + this.getLastName();
 	}
 	
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -304,7 +308,6 @@ public class Referee implements Comparable<Referee> {
 	 * @param obj
 	 * @return boolean
 	 */
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

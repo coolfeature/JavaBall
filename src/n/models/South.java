@@ -26,7 +26,6 @@ public class South implements Area {
 	 * Getter method that returns the state of travel
 	 * @return travel
 	 */
-	@Override
 	public boolean getTravel() {
 		return travel;
 	}
@@ -35,13 +34,11 @@ public class South implements Area {
 	 * Setter for travel
 	 * @param travel
 	 */
-	@Override
 	public void setTravel(boolean travel) {
 		this.travel = travel;		
 	}
 	
 	
-	@Override
 	public String toString() {
 		String[] tokens = java.lang.invoke.MethodHandles.lookup()
 				.lookupClass().getName().split("\\.");
@@ -52,7 +49,6 @@ public class South implements Area {
 	 * Getter for TravelFlag
 	 * @return getTravel
 	 */
-	@Override
 	public String getTravelFlag() {
 		return getTravel() ? "Y" : "N";
 	}
@@ -62,7 +58,6 @@ public class South implements Area {
 	 * @param other
 	 * @return boolean
 	 */
-	@Override
 	public boolean isAdjacent(Area other) {
 		if (other instanceof North) {
 			return false;
@@ -71,7 +66,6 @@ public class South implements Area {
 		}
 	}
 
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -84,7 +78,6 @@ public class South implements Area {
 	 * @param obj
 	 * @return boolean
 	 */
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
