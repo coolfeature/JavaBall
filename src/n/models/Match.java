@@ -238,7 +238,8 @@ public class Match {
 	 * 2) The suitable referees are selected on the basis of their 
 	 * qualification and the willingness to travel to the match area. The
 	 * meeting of the two requirements is essential in order to be considered
-	 * for allocation.
+	 * for allocation. The referees with a 'Senior' qualification may referee
+	 * both Senior and Junior matches.
 	 * 
 	 * 3) The method returns a deeply copied array of allocation candidates 
 	 * sorted in descending order. The array is deeply copied only on the level
@@ -268,10 +269,20 @@ public class Match {
 		 */
 		
 		for (int i = 0; i < registeredReferees.length; i++) {
-			if (registeredReferees[i].getQualification().getCategory().equals(this.getCategory()) 
-					&& registeredReferees[i].getTravelAreas().travelsTo(this.getArea()) ) {
-				referees[current] = registeredReferees[i];
-				current++;
+			// If a referee is willing to travel to the match area
+			if (registeredReferees[i].getTravelAreas().travelsTo(this.getArea())) {
+				//If the match in 'Senior' category				
+				if (this.getCategory().equals(Match.SENIOR)) {
+					//assign only 'Senior' referees
+					if (registeredReferees[i].getQualification().getCategory().equals(this.getCategory())) {
+						referees[current] = registeredReferees[i];
+						current++;
+					} 
+				// else assign all referees
+				} else {
+					referees[current] = registeredReferees[i];
+					current++;
+				}
 			}
 		}
 
