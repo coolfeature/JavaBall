@@ -53,18 +53,17 @@ public class Central implements Area {
 	 * @param other
 	 * @return boolean
 	 */
-	@Override
 	public boolean isAdjacent(Area other) {
 		return true;
 	}
 	
-	@Override
+
 	public String toString() {
 		String[] tokens = java.lang.invoke.MethodHandles.lookup()
 				.lookupClass().getName().split("\\.");
 		return tokens[tokens.length-1];
 	}
-	@Override
+	
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -78,7 +77,6 @@ public class Central implements Area {
 	 * @param obj
 	 * @return boolean
 	 */
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

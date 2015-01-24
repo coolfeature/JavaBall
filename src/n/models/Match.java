@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class Match {
 	
+	//final (constant) instance variables of the Match class
 	public static final String FIELD_WEEK = "WEEK";
 	public static final String FIELD_AREA = "AREA";
 	public static final String FIELD_GROUP= "GROUP";
@@ -23,6 +24,7 @@ public class Match {
 	public static final short MAX_MATCHES = 52;
 	public static final int PER_MATCH = Referee.SELECTED_REFEREES.length;
 
+	//current week instance variable along with the objects that will be used within this class
 	int week;
 	Area area;
 	String category;
@@ -154,7 +156,11 @@ public class Match {
 			week,category,area,refs[0],refs[1]);
 	}
 	
-	@Override
+	/**
+	 * toString method that will return a String variable displaying
+	 * Match information.
+	 * 
+	 */
 	public String toString() {
 		String week = Integer.toString(getWeek());
 		String category = getCategory();
