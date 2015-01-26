@@ -69,17 +69,6 @@ public class North implements Area {
 		}
 	}
 	
-	/**
-	 * 
-	 * @return result
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (travel ? 1231 : 1237);
-		return result;
-	}
 
 	/**
 	 * Method to check the state of an object being passed in.

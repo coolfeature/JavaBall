@@ -280,25 +280,7 @@ public class Referee implements Comparable<Referee> {
 		return this.getFirstName() + " " + this.getLastName();
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + allocations;
-		result = prime * result
-				+ ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result
-				+ ((homeArea == null) ? 0 : homeArea.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result
-				+ ((qualification == null) ? 0 : qualification.hashCode());
-		result = prime * result
-				+ ((travelAreas == null) ? 0 : travelAreas.hashCode());
-		return result;
-	}
-	
+
 	/**
 	 * Method to check the state of an object being passed in.
 	 * @param obj
