@@ -12,13 +12,11 @@ public class Main {
 		DataSource dataSource = new DataSource();
 		
 		/* Container object is instantiated with the identifier 'gui', this has been created 
-		 * within an invoke later method which ensures that any changes to be made to the GUI
-		 * on the EDT to ensure thread safety
+		 * within an invoke later method.
 		 */
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Container gui = new Container(dataSource);
-              //set the gui visibility to true as soon as the program runs
                 gui.setVisible(true);
             }
         });

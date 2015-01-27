@@ -263,7 +263,7 @@ public class Matches extends JPanel {
 	}
 	
 	/**
-	 * Instead of creating a pop-up boxes, information messages are displayed
+	 * Instead of creating a pop-up box, information messages are displayed
 	 * in a text area on the GUI. The sets the text of the area in accordance 
 	 * to the parameter variable.
 	 * @param type

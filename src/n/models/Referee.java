@@ -256,8 +256,7 @@ public class Referee implements Comparable<Referee> {
 
 
 	/**
-	 * An overridden method used by Array.sort().
-	 * 
+	 * An overridden method used by Array.sort(). 
 	 * Sorting should be done on first two characters of the ID
 	 * and then the number.
 	 */
