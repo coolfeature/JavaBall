@@ -162,18 +162,7 @@ public class Qualification {
 	}
 	
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((awardingBody == null) ? 0 : awardingBody.hashCode());
-		result = prime * result
-				+ ((category == null) ? 0 : category.hashCode());
-		result = prime * result + level;
-		return result;
-	}
-	
+
 	/**
 	 * Method to check the state of an object being passed in.
 	 * @param obj

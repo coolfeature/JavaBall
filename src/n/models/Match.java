@@ -437,20 +437,6 @@ public class Match {
 		return suitableReferees;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime
-				* result
-				+ ((allocatedReferees == null) ? 0 : allocatedReferees
-						.hashCode());
-		result = prime * result + ((area == null) ? 0 : area.hashCode());
-		result = prime * result
-				+ ((category == null) ? 0 : category.hashCode());
-		result = prime * result + week;
-		return result;
-	}
 	
 	/**
 	 * Method to check the state of an object being passed in.
